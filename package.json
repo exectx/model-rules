@@ -1,35 +1,52 @@
 {
-  "name": "openai-compat",
-  "description": "A compatibility layer for LLM APIs that aren't OpenAI API compatible",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "build": "react-router build",
-    "deploy": "npm run build && wrangler deploy",
-    "dev": "react-router dev",
-    "start": "wrangler dev",
-    "typecheck": "react-router typegen && tsc -b"
+  "name": "model-rules",
+  "description": "Rules engine for LM APIs",
+  "cloudflare": {
+    "label": "React Router Framework Starter",
+    "products": [
+      "Workers"
+    ],
+    "categories": [
+      "storage"
+    ],
+    "icon_urls": [
+      "https://imagedelivery.net/wSMYJvS3Xw-n339CbDyDIA/5ca0ca32-e897-4699-d4c1-6b680512f000/public"
+    ],
+    "preview_image_url": "https://imagedelivery.net/wSMYJvS3Xw-n339CbDyDIA/bfdc2f85-e5c9-4c92-128b-3a6711249800/public",
+    "dash": true
   },
   "dependencies": {
-    "@react-router/node": "^7.1.5",
-    "@react-router/serve": "^7.1.5",
-    "isbot": "^5.1.17",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "react-router": "^7.1.5"
+    "@conform-to/react": "^1.4.0",
+    "@conform-to/valibot": "^1.0.1",
+    "@conform-to/zod": "^1.4.0",
+    "@openauthjs/openauth": "^0.4.3",
+    "@unkey/cache": "^1.5.0",
+    "@unkey/error": "^0.2.0",
+    "superjson": "^2.2.2",
+    "valibot": "1.0.0",
+    "zod": "4.0.0-beta.20250420T053007"
   },
   "devDependencies": {
-    "@cloudflare/vite-plugin": "^0.1.1",
-    "@cloudflare/workers-types": "^4.20241112.0",
-    "@react-router/dev": "^7.1.5",
-    "@tailwindcss/vite": "^4.0.6",
-    "@types/node": "^20",
-    "@types/react": "^19.0.1",
-    "@types/react-dom": "^19.0.1",
-    "tailwindcss": "^4.0.6",
-    "typescript": "^5.7.2",
-    "vite": "^6.1.0",
-    "vite-tsconfig-paths": "^5.1.4",
-    "wrangler": "^3.87.0"
-  }
+    "@cloudflare/vite-plugin": "1.0.8",
+    "@cloudflare/workers-types": "^4.20250420.0",
+    "@types/node": "22.14.0",
+    "prettier": "^3.5.3",
+    "typescript": "5.8.3",
+    "vite": "6.3.2",
+    "vite-tsconfig-paths": "5.1.4",
+    "wrangler": "4.14.4"
+  },
+  "pnpm": {
+    "peerDependencyRules": {
+      "allowedVersions": {
+        "@conform-to/zod>zod": "4.0.0-beta.20250420T053007"
+      }
+    }
+  },
+  "private": true,
+  "scripts": {
+    "build": "pnpm --filter @exectx/rules build",
+    "typecheck": "pnpm --filter @exectx/rules typecheck"
+  },
+  "type": "module"
 }

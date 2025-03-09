@@ -1,0 +1,16 @@
+{
+  "name": "@exectx/cache",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/store/cloudflare.kv.ts"
+  },
+  "dependencies": {
+    "@unkey/cache": "^1.5.0",
+    "@exectx/utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250420.0"
+  }
+}

@@ -1,71 +1,68 @@
-# Welcome to React Router!
+# Rules API Documentation - Rules
 
-A modern, production-ready template for building full-stack React applications using React Router.
+## Overview
 
-## Features
+Rules provides a unified API endpoint for interacting with various LLM providers. It allows you to customize request parameters and apply the matching rules before proxying to the configured provider.
 
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
+## Authentication
 
-## Getting Started
+All API requests require authentication using a Bearer token:
 
-### Installation
-
-Install the dependencies:
-
-```bash
-npm install
+```
+Authorization: Bearer your_api_token
 ```
 
-### Development
+You can generate API tokens in the dashboard.
 
-Start the development server with HMR:
+## Proxy Endpoint
 
-```bash
-npm run dev
+### Send a Chat Completion Request
+
+Update the `baseUrl` parameter in your OpenAI client to point to the proxy endpoint.
+
+**Endpoint**: `POST /api/chat/completions`
+
+**Request Format**:
+
+```json
+{
+  "model": "openai::gpt-4",
+  "messages": [
+    { "role": "system", "content": "You are a helpful assistant." },
+    { "role": "user", "content": "Tell me about parameter overrides." }
+  ],
+  "temperature": 0.7,
+  "max_tokens": 500
+}
 ```
 
-Your application will be available at `http://localhost:5173`.
+**Model Name Format**:
 
-## Building for Production
+- With provider prefix: `provider::model` (e.g., `openai::gpt-4`, `anthropic::claude-2`)
+- TODO: Without prefix: Just the model name (e.g., `gpt-4`) - uses default provider
 
-Create a production build:
+**Response**:
 
-```bash
-npm run build
-```
+The response will match the format returned by the OpenAI API.
 
-## Deployment
+## Rules
 
-Deployment is done using the Wrangler CLI.
+Your request parameters will be combined with any configured provider-level or model-specific rules. Request parameters always take precedence over stored overrides.
 
-To build and deploy directly to production:
+## Best Practices
 
-```sh
-npm run deploy
-```
+1. Use specific provider prefixes in multi-provider setups
+2. Configure sensible defaults at the provider and model level
+3. Override parameters only when needed for specific requests
+4. Use streaming for real-time responses
+5. Monitor token usage to avoid rate limits
 
-To deploy a preview URL:
+## Error Handling
 
-```sh
-npx wrangler versions upload
-```
+Possible error responses:
 
-You can then promote a version to production after verification or roll it out progressively.
-
-```sh
-npx wrangler versions deploy
-```
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
-
----
-
-Built with ❤️ using React Router.
+- 400: Bad Request (invalid parameters)
+- 401: Unauthorized (missing or invalid token)
+- 404: Not Found (unknown route or model)
+- 429: Too Many Requests (rate limit exceeded)
+- 500: Internal Server Error

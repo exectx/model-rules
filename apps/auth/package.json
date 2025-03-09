@@ -1,0 +1,21 @@
+{
+  "name": "@exectx/auth",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "scripts": {
+    "dev": "wrangler dev",
+    "typegen": "wrangler types"
+  },
+  "dependencies": {
+    "@exectx/db": "workspace:*",
+    "@exectx/cache": "workspace:*",
+    "@exectx/crypto": "workspace:*",
+    "@exectx/utils": "workspace:*",
+    "@exectx/schema": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "22.14.0"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "name": "@exectx/db",
+  "version": "0.0.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "db:migrate": "cross-env DB_MIGRATING=true drizzle-kit generate",
+    "db:push": "drizzle-kit push",
+    "db:seed": "cross-env DB_SEEDING=true npm run ./src/seed.ts",
+    "db:studio": "drizzle-kit studio",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@exectx/utils": "workspace:*",
+    "@exectx/schema": "workspace:*",
+    "@libsql/client": "^0.15.3",
+    "drizzle-orm": "^0.41.0",
+    "ulid": "^3.0.0"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "drizzle-kit": "^0.30.6"
+  }
+}

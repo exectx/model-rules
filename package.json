@@ -1,6 +1,6 @@
 {
   "name": "model-rules",
-  "description": "Rules engine for LM APIs",
+  "description": "Rules engine for LLM APIs",
   "cloudflare": {
     "label": "React Router Framework Starter",
     "products": [

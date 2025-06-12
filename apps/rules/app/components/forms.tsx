@@ -1,30 +1,15 @@
-import { useField, useInputControl } from "@conform-to/react";
+import { useInputControl } from "@conform-to/react";
 import { Checkbox } from "./ui/checkbox";
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
-import React, {
-  use,
-  useCallback,
-  useEffect,
-  useId,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useEffect, useId, useState } from "react";
 import { cn } from "@/lib/utils";
 import { AlertCircleIcon, Info, TriangleAlert } from "lucide-react";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { motion, AnimatePresence } from "motion/react";
-import { OutputField_v2 as OutputField_v2_tw } from "./output-v2-tw";
-import { flushSync } from "react-dom";
 import useMeasure from "react-use-measure";
-import { set } from "valibot";
 import { Textarea } from "./ui/textarea";
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
-
-// import { TextLoop } from "./motion-primitives/text-loop";
-// import type { CheckboxProps as RadixCheckboxProps } from "@radix-ui/react-checkbox";
 
 interface InputProps extends Omit<CheckboxPrimitive.CheckboxProps, "type"> {
   type: string;
@@ -135,18 +120,9 @@ export function InputField(props: {
       className={cn("flex flex-col gap-2", props.className)}
       style={{ marginBottom: Boolean(describedBy) ? "0" : "-0.5rem" }}
     >
-      <Label
-        htmlFor={id}
-        // className={cn("text-muted-foreground", props.labelProps.className)}
-        {...props.labelProps}
-      ></Label>
+      <Label htmlFor={id} {...props.labelProps}></Label>
       {Custom ?? (
-        <Input
-          id={id}
-          {...props.inputProps}
-          aria-describedby={describedBy}
-          // className={cn("text-muted-foreground", props.inputProps.className)}
-        />
+        <Input id={id} {...props.inputProps} aria-describedby={describedBy} />
       )}
       <OutputField_v2
         id={describedBy}
@@ -174,16 +150,11 @@ export function TextareaField(props: {
       className={cn("flex flex-col gap-2", props.className)}
       style={{ marginBottom: Boolean(describedBy) ? "0" : "-0.5rem" }}
     >
-      <Label
-        htmlFor={id}
-        {...props.labelProps}
-        // className={cn("text-muted-foreground!", props.labelProps.className)}
-      ></Label>
+      <Label htmlFor={id} {...props.labelProps}></Label>
       <Textarea
         id={id}
         aria-describedby={describedBy}
         {...props.textareaProps}
-        // className={cn("text-muted-foreground", props.textareaProps.className)}
       />
       <OutputField_v2
         id={describedBy}
@@ -207,13 +178,6 @@ export function ErrorField(props: {
     offsetSize: true,
   });
   useEffect(() => setMounted(true), []);
-
-  // className={cn(
-  //   "col-span-full transition-discrete [transition-property:display]",
-  //   form.errors?.length ? "block" : "hidden"
-  // )}
-
-  // if (!Boolean(props.errors?.length)) return null;
   return (
     <motion.div
       aria-hidden={!hasErrors}
@@ -224,24 +188,12 @@ export function ErrorField(props: {
             ? undefined
             : spacerHeight,
         opacity: hasErrors ? 1 : 0,
-        // display: hasErrors ? "block" : "none",
       }}
       transition={{ duration: 0.2, ease: "easeInOut" }}
       className={cn(props.className)}
     >
       <AnimatePresence mode="wait">
-        <motion.div
-          key={`${id}-${hasErrors}`}
-          ref={refSpacer}
-          // initial={false}
-          // exit={{ opacity: 0, display: "block" }}
-          // animate={{ opacity: 1, display: "none" }}
-          // transition={{ duration: 0.2, ease: "easeInOut" }}
-          // className={cn(
-          //   // "transition-discrete duration-200 [transition-property:display]",
-          //   props.className
-          // )}
-        >
+        <motion.div key={`${id}-${hasErrors}`} ref={refSpacer}>
           <Alert
             id={id}
             variant="destructive"
@@ -270,32 +222,6 @@ export function OutputField_v2(props: {
   helper?: string;
   errors?: string[];
 }) {
-  // using useState to avoid synchronization issues with props updates before the `state` is updated
-  /*
-  let [helper, setHelper] = useState(props.helper);
-  let [errors, setErrors] = useState(props.errors);
-  let [hasErrors, setHasErrors] = useState(
-    Boolean(props.errors && props.errors.length > 0)
-  );
-  let hasContent = Boolean(hasErrors || helper);
-  let [state, setState] = useState<"initial" | "changed">("initial");
-  let helperKey = helper?.split(" ").join("-") ?? "no-helper";
-  let errorsKey =
-    errors?.map((e) => e.split(" ").join("-")).join(",") ?? "no-errors";
-
-  if (helper !== props.helper) {
-    console.log("Helper changed", props.helper);
-    if (state !== "changed") setState("changed");
-    setHelper(props.helper);
-  }
-  if (errors?.join(",") !== props.errors?.join(",")) {
-    console.log("Errors changed", props.errors);
-    if (state !== "changed") setState("changed");
-    setErrors(props.errors);
-    setHasErrors(Boolean(props.errors?.length));
-  }
-  */
-
   let { helper, errors } = props;
   let hasErrors = Boolean(errors && errors.length > 0);
   let hasContent = Boolean(hasErrors || helper);

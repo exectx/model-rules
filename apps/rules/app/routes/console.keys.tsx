@@ -1,5 +1,4 @@
-import { useEffect, useId, useMemo, useRef, useState } from "react";
-import ReactDOM, { flushSync } from "react-dom";
+import { useMemo, useRef, useState } from "react";
 import { getValibotConstraint, parseWithValibot } from "@conform-to/valibot";
 import {
   getFormProps,
@@ -16,7 +15,6 @@ import {
 } from "react-router";
 import type { Route } from "./+types/console.keys";
 import * as v from "valibot";
-import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
@@ -37,23 +35,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  AlertTriangleIcon,
-  Ban,
-  Check,
-  CircleCheck,
-  Copy,
-  Plus,
-  Trash,
-} from "lucide-react";
+import { Ban, Check, CircleCheck, Copy, Plus, Trash } from "lucide-react";
 import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 import {
   type ColumnDef,
   flexRender,
   getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
@@ -73,18 +60,14 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { generateApiKey } from "@exectx/crypto/gen-key";
-import { eq, is, schema, type Key } from "@exectx/db";
+import { eq, schema, type Key } from "@exectx/db";
 import { ROUTE_PATH as DELETE_KEY_ROUTE_PATH } from "./console.keys_.delete.$id";
 import { ROUTE_PATH as UPDATE_KEY_STATUS_ROUTE_PATH } from "./console.keys_.update-status.$id";
 import { Badge } from "@/components/ui/badge";
 import { Spinner } from "@/components/ui/spinner";
-import { InputField, OutputField } from "@/components/forms";
-import Day49 from "@/components/day-49";
-import { useFetcherWithReset } from "@/hooks/use-fetcher-with-reset";
-import useMeasure from "react-use-measure";
+import { InputField } from "@/components/forms";
 import { useFormCalls } from "@/hooks/use-form-calls";
 
 export const ROUTE_PATH = "/console/keys";

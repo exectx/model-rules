@@ -42,11 +42,6 @@ app.use("*", async (c, next) => {
 
 addRulesApi(app);
 
-// app.get("/test", async (c) => {
-// const { cache, db } = c.get("services");
-// return c.json({ session: user });
-// });
-
 const mode = import.meta.env.MODE;
 const reactRouterRequestHandler = createRequestHandler(
   () => import("virtual:react-router/server-build"),
@@ -60,7 +55,6 @@ app.use("*", async (c) => {
   }
   const { clerk } = c.get("services");
   const auth = (await clerk.authenticateRequest(c.req.raw)).toAuth();
-  c.res.headers.set("x-test", "1");
   return reactRouterRequestHandler(c.req.raw, {
     cf: {
       env: c.env,

@@ -178,7 +178,6 @@ const columns: ColumnDef<RuleItem>[] = [
               <DropdownMenuItem
                 onClick={() => setIsDeleteDialogOpen(true)}
                 variant="destructive"
-                // className="[&>svg]:text-destructive-foreground! text-destructive-foreground!"
               >
                 <Trash2 className="size-4" />
                 Delete
@@ -222,23 +221,20 @@ const columns: ColumnDef<RuleItem>[] = [
   },
 ];
 
-function usePendingDeletes(): string[] {
+function usePendingRules(): string[] {
   const fetchers = useFetchers();
   const stableDeletesRef = useRef<string[]>([]);
   const currentDeletes = useMemo(() => {
     const result: string[] = [];
     for (const f of fetchers) {
-      if (!f.formData) continue;
-      const formDataObj = Object.fromEntries(f.formData.entries());
-      const parsed = v.safeParse(RuleActionClientSchema, formDataObj);
-      if (!parsed.success) continue;
-      if (parsed.output.type !== "delete") continue;
-      result.push(parsed.output.id);
+      if (!f.key.startsWith("rules:delete:")) continue;
+      const id = f.key.replace("rules:delete:", "");
+      if (!id) continue;
+      result.push(id);
     }
     result.sort();
     return result;
   }, [fetchers]);
-
   if (currentDeletes.join(",") !== stableDeletesRef.current.join(",")) {
     stableDeletesRef.current = currentDeletes;
   }
@@ -247,7 +243,8 @@ function usePendingDeletes(): string[] {
 
 export default function RulesPage() {
   const { rules } = useLoaderData<typeof loader>();
-  const deletes = usePendingDeletes();
+  const deletes = usePendingRules();
+
   const _rules = useMemo(() => {
     return rules.filter((rule) => !deletes.includes(rule.id));
   }, [rules, deletes]);

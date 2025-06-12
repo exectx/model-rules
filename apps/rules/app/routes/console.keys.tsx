@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
+import ReactDOM, { flushSync } from "react-dom";
 import { getValibotConstraint, parseWithValibot } from "@conform-to/valibot";
 import {
   getFormProps,
@@ -75,10 +76,16 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { generateApiKey } from "@exectx/crypto/gen-key";
-import { eq, schema, type Key } from "@exectx/db";
+import { eq, is, schema, type Key } from "@exectx/db";
 import { ROUTE_PATH as DELETE_KEY_ROUTE_PATH } from "./console.keys_.delete.$id";
 import { ROUTE_PATH as UPDATE_KEY_STATUS_ROUTE_PATH } from "./console.keys_.update-status.$id";
 import { Badge } from "@/components/ui/badge";
+import { Spinner } from "@/components/ui/spinner";
+import { InputField, OutputField } from "@/components/forms";
+import Day49 from "@/components/day-49";
+import { useFetcherWithReset } from "@/hooks/use-fetcher-with-reset";
+import useMeasure from "react-use-measure";
+import { useFormCalls } from "@/hooks/use-form-calls";
 
 export const ROUTE_PATH = "/console/keys";
 
@@ -88,7 +95,16 @@ const ActionSchema = v.variant("type", [
     name: v.pipe(
       v.string(),
       v.trim(),
-      v.minLength(2, "The strings must be at least 2 characters long")
+      v.minLength(2, "The strings must be at least 2 characters long."),
+      v.check((input) => !input.includes(" "), "No spaces allowed.")
+      // v.rawCheck((c) => {
+      //   if (Math.random() < 0.5) {
+      //     c.addIssue({ message: "Test error." });
+      //     c.addIssue({ message: "Test error 2." });
+      //   } else {
+      //     c.addIssue({ message: "Test error 3." });
+      //   }
+      // })
     ),
   }),
   v.object({
@@ -151,7 +167,8 @@ export async function action(args: Route.ActionArgs) {
     });
     // await new Promise((resolve) => setTimeout(resolve, 1500));
     return data<ActionResult>({
-      form: submission.reply({ fieldErrors: {} }),
+      // form: submission.reply({ fieldErrors: {}, resetForm: true }),
+      form: submission.reply(),
       result: { type: "create", key },
     });
   } else {
@@ -165,14 +182,8 @@ export async function action(args: Route.ActionArgs) {
   }
 }
 
-export function CreateApiKeyFormDialog() {
-  const [open, setOpen] = useState(false);
+function CreateApiKeyForm(props: { onSuccess?: () => void }) {
   const fetcher = useFetcher<typeof action>({ key: `keys:create` });
-  const isPending = fetcher.state !== "idle";
-  // const actionData = useActionData<typeof action>();
-  const actionData = fetcher.data;
-  const [actionResult, setActionResult] = useState<ActionResult["result"]>();
-
   const [form, fields] = useForm({
     defaultValue: {
       type: "create",
@@ -184,125 +195,162 @@ export function CreateApiKeyFormDialog() {
     },
   });
 
-  useEffect(() => {
-    setActionResult(actionData?.result);
-  }, [actionData]);
-
-  function resetActionResult() {
-    setActionResult(undefined);
-  }
-
-  const { isCopied, copyToClipboard } = useCopyToClipboard();
+  useFormCalls({
+    formResult: fetcher.data?.form,
+    actionResult: fetcher.data,
+    onSuccess: props.onSuccess,
+  });
 
   return (
-    <Dialog
-      open={open}
-      onOpenChange={(isOpen) => {
-        if (!isOpen) {
-          form.reset();
-          // account for dialog close/open animation
-          setTimeout(() => {
-            resetActionResult();
-          }, 200);
-        }
-        setOpen(isOpen);
-      }}
-    >
-      <DialogTrigger asChild>
-        <Button>
-          <Plus className="size-4" />
-          Create Key
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] gap-6 rounded-2xl">
-        <DialogHeader>
-          <DialogTitle className="font-normal">
-            {actionResult?.type !== "create"
-              ? "Create API Key"
-              : "Save your API key"}
-          </DialogTitle>
-          <DialogDescription asChild>
-            {actionResult?.type !== "create" ? (
-              <p>Give your key a name so you can easily identify it later.</p>
-            ) : (
-              <div className="flex justify-between items-center">
-                <p>You will not be able to see your key again.</p>
-                <div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="h-7 min-w-22"
-                    onClick={() => copyToClipboard(actionResult.key)}
-                  >
-                    {isCopied ? (
-                      <Check className="size-3" />
-                    ) : (
-                      <Copy className="size-3" />
-                    )}
-                    {isCopied ? "Copied" : "Copy"}
-                  </Button>
-                </div>
-              </div>
-            )}
-          </DialogDescription>
-        </DialogHeader>
-        <fetcher.Form
-          method="post"
-          className="gap-6"
-          {...getFormProps(form)}
-          action="/console/keys"
-          style={{
-            display: actionResult?.type !== "create" ? "grid" : "none",
-          }}
+    <>
+      <fetcher.Form method="post" {...getFormProps(form)} action={ROUTE_PATH}>
+        <fieldset
+          disabled={fetcher.state !== "idle"}
+          className="group grid gap-6"
         >
           <Input {...getInputProps(fields.type, { type: "hidden" })} />
-          <div className="grid items-center gap-3">
-            <Label htmlFor={fields.name.id} className="text-muted-foreground">
-              Name your key
-            </Label>
-            <Input
-              required
-              placeholder="my test key for ai agents"
-              autoComplete="off"
-              className="col-span-3"
-              aria-invalid={Boolean(fields.name.errors)}
-              {...getInputProps(fields.name, { type: "text" })}
-            />
-            {fields.name.errors && (
-              <p className="text-destructive-foreground text-sm">
-                {fields.name.errors.join(",")}
-              </p>
-            )}
-          </div>
-        </fetcher.Form>
-        <div
-          className="rounded-lg text-muted-foreground border p-3.5 font-mono text-sm break-all"
-          style={{
-            display: actionResult?.type === "create" ? "block" : "none",
-          }}
-        >
-          {actionResult?.type === "create" && actionResult?.key}
-        </div>
-        <DialogFooter>
-          <DialogClose asChild>
-            <Button variant="outline" disabled={isPending}>
-              {actionResult?.type === "create" ? "Close" : "Cancel"}
+          <InputField
+            inputProps={getInputProps(fields.name, { type: "text" })}
+            labelProps={{ children: "Name" }}
+            helper="Name should not contain spaces."
+            errors={fields.name.errors}
+          />
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="outline">Close</Button>
+            </DialogClose>
+            <Button
+              type="submit"
+              form={form.id}
+              className="items-center justify-center"
+            >
+              <span className="absolute group-enabled:opacity-0">
+                <Spinner className="bg-primary-foreground" />
+              </span>
+              <span className="group-disabled:opacity-0">Add</span>
             </Button>
-          </DialogClose>
-          <Button
-            type="submit"
-            form={form.id}
-            className="min-w-20"
-            disabled={isPending || !form.dirty}
-            style={{
-              display: actionResult?.type === "create" ? "none" : "inline-flex",
-            }}
-          >
-            Add
+          </DialogFooter>
+        </fieldset>
+      </fetcher.Form>
+    </>
+  );
+}
+
+export function DisplayApiKey() {
+  const fetcher = useFetcher<typeof action>({ key: `keys:create` });
+  const { isCopied, copyToClipboard } = useCopyToClipboard();
+  if (!fetcher.data?.result || fetcher.data?.result?.type !== "create")
+    return null;
+  const key = fetcher.data.result.key;
+  return (
+    <>
+      <div className="rounded-lg text-muted-foreground border p-4 font-mono text-sm ">
+        <p className="break-all">{key}</p>
+      </div>
+
+      <DialogFooter>
+        <Button
+          onClick={() => copyToClipboard(key)}
+          {...(isCopied ? { "data-copied": "" } : {})}
+          className="items-center group justify-center min-w-24 active:bg-blue-400!"
+          // aria-label={isCopied ? "Copied" : "Copy API Key"}
+        >
+          <Check className="size-3 not-group-data-copied:hidden" />
+          <Copy className="size-3 group-data-copied:hidden" />
+          <span className="group-data-copied:hidden">Copy</span>
+          <span className="not-group-data-copied:hidden">Copied</span>
+        </Button>
+      </DialogFooter>
+    </>
+  );
+}
+
+export function CreateApiKeyDialog() {
+  const [formOpen, setFormOpen] = useState(false);
+  const [keyOpen, setKeyOpen] = useState(false);
+
+  return (
+    <>
+      <Dialog open={formOpen} onOpenChange={setFormOpen}>
+        <DialogTrigger asChild>
+          <Button>
+            <Plus className="size-4" />
+            Create Key
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </DialogTrigger>
+        <DialogContent
+          className="sm:max-w-[425px] gap-6 rounded-2xl"
+          // style={{ display: keyOpen ? "none" : undefined }}
+        >
+          <DialogHeader>
+            <DialogTitle className="font-normal">Create API Key</DialogTitle>
+            <DialogDescription asChild>
+              <p>Give your key a name so you can easily identify it later.</p>
+            </DialogDescription>
+          </DialogHeader>
+          <CreateApiKeyForm
+            onSuccess={() => {
+              setFormOpen(false);
+              setTimeout(() => {
+                setKeyOpen(true);
+              }, 0);
+            }}
+          />
+        </DialogContent>
+      </Dialog>
+      <Dialog open={keyOpen} onOpenChange={setKeyOpen} defaultOpen={false}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="font-normal">API Key</DialogTitle>
+            <DialogDescription>
+              This is your API key. Keep it safe!
+            </DialogDescription>
+          </DialogHeader>
+          <DisplayApiKey />
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+}
+
+function KeyStatusUpdateDialogContent({ row }: { row: { original: Key } }) {
+  const statusUpdateFetcher = useFetcher<typeof action>({
+    key: `key:status-update:${row.original.id}`,
+  });
+  const isStatusUpdatePending = statusUpdateFetcher.state !== "idle";
+
+  return (
+    <>
+      <AlertDialogHeader>
+        <AlertDialogTitle className="font-normal">
+          Are you sure you want to{" "}
+          {row.original.disabledAt ? "enable" : "disable"} this API key?
+        </AlertDialogTitle>
+        <AlertDialogDescription>
+          This will {row.original.disabledAt ? "enable" : "disable"} your API
+          key.
+        </AlertDialogDescription>
+      </AlertDialogHeader>
+      <AlertDialogFooter>
+        <statusUpdateFetcher.Form
+          method="POST"
+          className="contents"
+          action={UPDATE_KEY_STATUS_ROUTE_PATH(row.original.id)}
+        >
+          <AlertDialogCancel type="button">Cancel</AlertDialogCancel>
+          <AlertDialogAction
+            className={buttonVariants({
+              variant: row.original.disabledAt ? "default" : "destructive",
+            })}
+            type="submit"
+            disabled={isStatusUpdatePending}
+            // onClick={(e) => {}}
+          >
+            {row.original.disabledAt ? "Enable" : "Disable"}
+          </AlertDialogAction>
+        </statusUpdateFetcher.Form>
+      </AlertDialogFooter>
+    </>
   );
 }
 
@@ -403,7 +451,14 @@ const columns: ColumnDef<Key>[] = [
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <AlertDialog open={statusDialog} onOpenChange={setStatusDialog}>
+          <AlertDialog
+            open={statusDialog}
+            onOpenChange={setStatusDialog}
+            defaultOpen={false}
+          >
+            {/* <AlertDialogContent>
+              <KeyStatusUpdateDialogContent row={row} />
+            </AlertDialogContent> */}
             <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogTitle className="font-normal">
@@ -438,7 +493,11 @@ const columns: ColumnDef<Key>[] = [
             </AlertDialogContent>
           </AlertDialog>
 
-          <AlertDialog open={deleteDialog} onOpenChange={setDeleteDialog}>
+          <AlertDialog
+            open={deleteDialog}
+            onOpenChange={setDeleteDialog}
+            defaultOpen={false}
+          >
             <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogTitle className="font-normal">
@@ -477,6 +536,7 @@ function usePendingKeys(): { deletes: string[]; statusUpdates: string[] } {
   const fetchers = useFetchers();
   const stableDeletesRef = useRef<string[]>([]);
   const stableStatusUpdatesRef = useRef<string[]>([]);
+  console.log("fetchers", fetchers);
 
   const currentDeletes = useMemo(() => {
     const result: string[] = [];
@@ -486,7 +546,7 @@ function usePendingKeys(): { deletes: string[]; statusUpdates: string[] } {
       if (!id) continue;
       result.push(id);
     }
-    result.sort();
+    // result.sort();
     return result;
   }, [fetchers]);
 
@@ -498,7 +558,7 @@ function usePendingKeys(): { deletes: string[]; statusUpdates: string[] } {
       if (!id) continue;
       result.push(id);
     }
-    result.sort();
+    // result.sort();
     return result;
   }, [fetchers]);
 
@@ -517,32 +577,35 @@ function usePendingKeys(): { deletes: string[]; statusUpdates: string[] } {
   };
 }
 
+// TODO: pagination, selection, actions
 export default function APIKeysPage() {
   const { keys } = useLoaderData<typeof loader>();
   const { deletes, statusUpdates } = usePendingKeys();
 
   const _keys = useMemo(() => {
-    return keys
-      .filter((key) => !deletes.includes(key.id))
-      .map((key) => {
-        // Apply optimistic status update if this key has a pending status change
-        if (statusUpdates.includes(key.id)) {
-          return {
-            ...key,
-            disabledAt: key.disabledAt ? null : new Date(),
-          };
-        }
-        return key;
-      });
+    // Use a single loop for efficiency
+    const deletesSet = new Set(deletes);
+    const statusUpdatesSet = new Set(statusUpdates);
+
+    const result: typeof keys = [];
+    for (const key of keys) {
+      if (deletesSet.has(key.id)) continue;
+      if (statusUpdatesSet.has(key.id)) {
+        result.push({ ...key, disabledAt: key.disabledAt ? null : new Date() });
+      } else {
+        result.push(key);
+      }
+    }
+    return result;
   }, [keys, deletes, statusUpdates]);
 
   const table = useReactTable({
     data: _keys,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
+    // getPaginationRowModel: getPaginationRowModel(),
+    // getSortedRowModel: getSortedRowModel(),
+    // getFilteredRowModel: getFilteredRowModel(),
   });
 
   return (
@@ -551,7 +614,7 @@ export default function APIKeysPage() {
         <div className="bg-card rounded-xl p-6 flex border flex-col gap-6">
           <div className="flex justify-between items-center">
             <h1 className="text-xl font-light">API keys</h1>
-            <CreateApiKeyFormDialog />
+            <CreateApiKeyDialog />
           </div>
           <Table>
             <TableHeader>

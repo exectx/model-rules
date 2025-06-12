@@ -14,12 +14,20 @@ export async function action(args: Route.ActionArgs) {
   if (!userId) throw data({ error: "Not authorized" }, { status: 401 });
   const { db } = args.context.services;
   const { id } = args.params;
+  const params = new URL(args.request.url).searchParams;
+  const shouldRedirect = params.get("redirect");
+
   if (!id) throw data(null, { status: 400 });
   // TODO: soft delete
   await db
     .delete(schema.rules)
     .where(and(eq(schema.rules.id, id), eq(schema.rules.userId, userId)));
-
+  console.log(args.request.referrer);
   args.context.cf.ctx.waitUntil(invalidateAllRulesCache(userId));
-  return redirect(RULES_ROUTE_PATH);
+
+  if (shouldRedirect === "true") {
+    const redirectUrl = new URL(RULES_ROUTE_PATH, args.request.url);
+    return redirect(RULES_ROUTE_PATH);
+  }
+  return { deleted: true };
 }

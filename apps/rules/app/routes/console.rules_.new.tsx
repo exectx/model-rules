@@ -13,7 +13,7 @@ import * as v from "valibot";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { OutputField } from "@/components/forms";
+import { InputField, OutputField, TextareaField } from "@/components/forms";
 import {
   Card,
   CardContent,
@@ -34,6 +34,8 @@ import { ModelRulesSchema, ProviderRulesSchema } from "@exectx/schema/rules";
 import { schema } from "@exectx/db";
 import { ROUTE_PATH as RULES_ROUTE_PATH } from "./console.rules";
 import { buildKey, encrypt } from "@exectx/crypto/aes";
+import { useIsPending } from "@/hooks/use-is-pending";
+import { Spinner } from "@/components/ui/spinner";
 
 export const providerRulesFormSchema = v.optional(
   v.pipe(
@@ -75,7 +77,9 @@ export const modelRulesFormSchema = v.optional(
       if (parsed.success) {
         return parsed.output;
       }
-      addIssue({ message: "Invalid Rules" });
+      for (const issue of parsed.issues) {
+        addIssue({ message: issue.message });
+      }
       return NEVER;
     })
   )
@@ -189,6 +193,9 @@ export default function NewRoutePage() {
       return parseWithValibot(formData, { schema: NewRulesetFormSchema });
     },
   });
+  const isPending = useIsPending();
+
+  // getTextareaProps
 
   return (
     <div className="p-4 flex-1 max-w-2xl w-full mx-auto">
@@ -199,140 +206,120 @@ export default function NewRoutePage() {
             Create rules linked to a specific LLM provider.
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <Form method="POST" action={ROUTE_PATH} {...getFormProps(form)}>
-            <div className="grid w-full items-center gap-4">
-              <fieldset className="flex flex-col gap-1.5">
-                <Label
-                  htmlFor={fields.prefix.id}
-                  className="flex items-center gap-2"
-                >
-                  Prefix
-                  <span className="border border-input rounded bg-input/80 text-muted-foreground px-1 py-0.5 text-xs">
-                    Unique
-                  </span>
-                </Label>
-                <Input
-                  autoComplete="off"
-                  aria-invalid={Boolean(fields.prefix.errors)}
-                  placeholder="e.g. openai"
-                  {...getInputProps(fields.prefix, { type: "text" })}
-                />
-                <OutputField
-                  info="Unique prefix to distinguish between different LLM providers."
+        <Form
+          method="POST"
+          action={ROUTE_PATH}
+          {...getFormProps(form)}
+          className="contents"
+        >
+          <fieldset disabled={isPending} className="contents group/form">
+            <CardContent>
+              <div className="grid w-full items-center gap-4">
+                <InputField
+                  labelProps={{ children: "Prefix" }}
+                  inputProps={getInputProps(fields.prefix, {
+                    type: "text",
+                  })}
                   errors={fields.prefix.errors}
+                  helper="This prefix will be used to identify the ruleset. It must be unique."
                 />
-              </fieldset>
-              <fieldset className="flex flex-col gap-1.5">
-                <Label
-                  htmlFor={fields.baseUrl.id}
-                  className="flex items-center gap-2"
-                >
-                  Base URL
-                </Label>
-                <Input
-                  autoComplete="off"
-                  aria-invalid={Boolean(fields.baseUrl.errors)}
-                  placeholder="https://api.openai.com/v1"
-                  {...getInputProps(fields.baseUrl, { type: "url" })}
-                />
-                <OutputField
-                  info="The base URL of the LLM provider's API."
+                <InputField
+                  labelProps={{ children: "Base URL" }}
+                  inputProps={getInputProps(fields.baseUrl, {
+                    type: "url",
+                    placeholder: "https://api.openai.com/v1",
+                  })}
                   errors={fields.baseUrl.errors}
+                  helper="The base URL of the LLM provider's API."
                 />
-              </fieldset>
-              <fieldset className="flex flex-col gap-1.5">
-                <Label
-                  htmlFor={fields.apiKey.id}
-                  className="flex items-center gap-2"
-                >
-                  Provider API Key
-                </Label>
-                <Input
-                  autoComplete="off"
-                  aria-invalid={Boolean(fields.apiKey.errors)}
-                  placeholder="sk-..."
-                  {...getInputProps(fields.apiKey, { type: "password" })}
-                />
-                <OutputField
-                  info="The API key for the LLM provider."
+                <InputField
+                  labelProps={{ children: "Provider API Key" }}
+                  inputProps={getInputProps(fields.apiKey, {
+                    type: "password",
+                    placeholder: "sk-...",
+                  })}
                   errors={fields.apiKey.errors}
+                  helper="The API key for the LLM provider."
                 />
-              </fieldset>
-
-              <Expandable className="group" open>
-                <ExpandableSummary>
-                  <ChevronRight className="size-5 transition-transform group-open:rotate-90" />
-                  <span>Rules</span>
-                </ExpandableSummary>
-                <ExpandableContent>
-                  <Expandable className="group/provider">
-                    <ExpandableSummary>
-                      <ChevronRight className="size-5 transition-transform group-open/provider:rotate-90" />
-                      <span>Provider rules</span>
-                    </ExpandableSummary>
-                    <ExpandableContent>
-                      <fieldset className="flex flex-col gap-1.5">
-                        <Label
-                          htmlFor={fields.providerRules.id}
-                          className="flex items-center gap-2"
-                        >
-                          Rules
-                          <span className="border border-input rounded bg-input/80 text-muted-foreground px-1 py-0.5 text-xs">
-                            JSON
-                          </span>
-                        </Label>
-                        <Textarea
-                          className="font-mono text-sm placeholder:text-sm max-h-[30lh]"
-                          placeholder={`{\n  "temperature": 0.8,\n  "max_tokens": 25000\n}`}
-                          {...getTextareaProps(fields.providerRules)}
-                        />
-                        <OutputField
+                <Expandable className="group/exp" open>
+                  <ExpandableSummary>
+                    <ChevronRight className="size-5 transition-transform group-open/exp:rotate-90" />
+                    <span>Rules</span>
+                  </ExpandableSummary>
+                  <ExpandableContent>
+                    <Expandable className="group/provider">
+                      <ExpandableSummary>
+                        <ChevronRight className="size-5 transition-transform group-open/provider:rotate-90" />
+                        <span>Provider rules</span>
+                      </ExpandableSummary>
+                      <ExpandableContent>
+                        <TextareaField
+                          labelProps={{
+                            className: "inline-flex gap-1.5 items-center",
+                            children: (
+                              <>
+                                Provider Rules
+                                <span className="border border-input rounded bg-input/80 text-muted-foreground px-1 py-0.5 text-xs">
+                                  JSON
+                                </span>
+                              </>
+                            ),
+                          }}
+                          textareaProps={{
+                            ...getTextareaProps(fields.providerRules),
+                            className:
+                              "font-mono text-sm placeholder:text-sm max-h-[30lh]",
+                            placeholder: `{\n  "temperature": 0.8,\n  "max_tokens": 25000\n}`,
+                          }}
+                          helper="These parameters will be applied to every request sent to this provider. Must be a valid JSON."
                           errors={fields.providerRules.errors}
-                          info="These parameters will be applied to every request sent to this provider. Must be a valid JSON."
                         />
-                      </fieldset>
-                    </ExpandableContent>
-                  </Expandable>
+                      </ExpandableContent>
+                    </Expandable>
 
-                  <Expandable className="group/model">
-                    <ExpandableSummary>
-                      <ChevronRight className="size-5 transition-transform group-open/model:rotate-90" />
-                      <span>Model rules</span>
-                    </ExpandableSummary>
-                    <ExpandableContent>
-                      <fieldset className="flex flex-col gap-1.5">
-                        <Label
-                          htmlFor={fields.modelRules.id}
-                          className="flex items-center gap-2"
-                        >
-                          Rules
-                          <span className="border border-input rounded bg-input/80 text-muted-foreground px-1 py-0.5 text-xs">
-                            JSON
-                          </span>
-                        </Label>
-                        <Textarea
-                          className="font-mono text-sm placeholder:text-sm max-h-[30lh]"
-                          placeholder={`{\n  "o4-mini": {\n    "temperature": 0.8,\n    "max_tokens": 25000\n  },\n  "o3-mini": {\n    "temperature": 0.7,\n    "max_tokens": 75000\n  }\n}`}
-                          {...getTextareaProps(fields.modelRules)}
-                        />
-                        <OutputField
+                    <Expandable className="group/model">
+                      <ExpandableSummary>
+                        <ChevronRight className="size-5 transition-transform group-open/model:rotate-90" />
+                        <span>Model rules</span>
+                      </ExpandableSummary>
+                      <ExpandableContent>
+                        <TextareaField
+                          labelProps={{
+                            className: "inline-flex gap-1.5 items-center",
+                            children: (
+                              <>
+                                Model rules
+                                <span className="border border-input rounded bg-input/80 text-muted-foreground px-1 py-0.5 text-xs">
+                                  JSON
+                                </span>
+                              </>
+                            ),
+                          }}
+                          textareaProps={{
+                            ...getTextareaProps(fields.modelRules),
+                            className:
+                              "font-mono text-sm placeholder:text-sm max-h-[30lh]",
+                            placeholder: `{\n  "o4-mini": {\n    "temperature": 0.8,\n    "max_tokens": 25000\n  },\n  "o3-mini": {\n    "temperature": 0.7,\n    "max_tokens": 75000\n  }\n}`,
+                          }}
+                          helper="These parameters will be applied to the request matching the model name. Must be a valid JSON."
                           errors={fields.modelRules.errors}
-                          info="These parameters will be applied to the request matching the model name. Must be a valid JSON."
                         />
-                      </fieldset>
-                    </ExpandableContent>
-                  </Expandable>
-                </ExpandableContent>
-              </Expandable>
-            </div>
-          </Form>
-        </CardContent>
-        <CardFooter className="flex justify-end">
-          <Button type="submit" form={form.id} className="min-w-full">
-            Save
-          </Button>
-        </CardFooter>
+                      </ExpandableContent>
+                    </Expandable>
+                  </ExpandableContent>
+                </Expandable>
+              </div>
+            </CardContent>
+            <CardFooter>
+              <Button type="submit" form={form.id} className="w-full">
+                <span className="absolute group-enabled/form:opacity-0">
+                  <Spinner className="bg-primary-foreground" />
+                </span>
+                <span className="group-disabled/form:opacity-0">Save</span>
+              </Button>
+            </CardFooter>
+          </fieldset>
+        </Form>
       </Card>
     </div>
   );

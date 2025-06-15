@@ -519,7 +519,6 @@ function usePendingKeys(): { deletes: string[]; statusUpdates: string[] } {
   const fetchers = useFetchers();
   const stableDeletesRef = useRef<string[]>([]);
   const stableStatusUpdatesRef = useRef<string[]>([]);
-  console.log("fetchers", fetchers);
 
   const currentDeletes = useMemo(() => {
     const result: string[] = [];
@@ -529,7 +528,7 @@ function usePendingKeys(): { deletes: string[]; statusUpdates: string[] } {
       if (!id) continue;
       result.push(id);
     }
-    // result.sort();
+    result.sort();
     return result;
   }, [fetchers]);
 
@@ -541,7 +540,7 @@ function usePendingKeys(): { deletes: string[]; statusUpdates: string[] } {
       if (!id) continue;
       result.push(id);
     }
-    // result.sort();
+    result.sort();
     return result;
   }, [fetchers]);
 

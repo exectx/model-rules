@@ -281,10 +281,8 @@ export async function action(args: Route.ActionArgs) {
   );
 }
 
-const updatePrefixFetcherKey = "update:rules:prefix";
 function UpdatePrefixForm(props: { onSuccess?: () => void }) {
   let { id, prefix, updatedAt } = useRuleData();
-  // console.log("headers info", { isPrefixUpdated });
   let formId = `${useId()}-${prefix}-${updatedAt?.getTime() ?? 0}`;
   const actionData = useActionData<typeof action>();
   let navigation = useNavigation();
@@ -407,7 +405,6 @@ function PrefixSection() {
   );
 }
 
-const updateRulesProviderFetcherKey = "update:rules:provider";
 function ProviderDetailsSection(props: { onSuccess?: () => void }) {
   const { prefix, ...rule } = useRuleData();
   let fetcher = useFetcher<typeof action>();
@@ -522,8 +519,6 @@ function ProviderDetailsSection(props: { onSuccess?: () => void }) {
     </>
   );
 }
-
-const updateRulesFetcherKey = "update:rules:rules";
 
 // Individual rule editor component
 function RuleEditor({

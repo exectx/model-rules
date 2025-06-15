@@ -37,7 +37,7 @@ export function Footer() {
             className="-m-2.5 font-normal"
             size="sm"
           >
-            <Link to="#github" aria-label="GitHub">
+            <Link to="https://github.com/exectx/model-rules" target="_blank" aria-label="GitHub">
               GitHub <ArrowUpRight className="size-4 text-muted-foreground" />
             </Link>
           </Button>

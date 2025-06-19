@@ -202,7 +202,7 @@ export async function action(args: Route.ActionArgs) {
     if (input.apiKey) {
       const encryptionKey = await buildKey(
         userId,
-        args.context.cf.env.ENCRYPTION_KEY
+        args.context.cloudflare.env.ENCRYPTION_KEY
       );
       const { encrypted, iv } = await encrypt(input.apiKey, encryptionKey);
       apiKeyEncrypted = encrypted;
@@ -266,7 +266,7 @@ export async function action(args: Route.ActionArgs) {
       );
   }
   // Invalidate cache
-  args.context.cf.ctx.waitUntil(invalidateAllRulesCache(userId));
+  args.context.cloudflare.ctx.waitUntil(invalidateAllRulesCache(userId));
   if (input.action === "update_prefix") {
     return redirect(ROUTE_PATH(input.prefix));
   }

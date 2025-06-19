@@ -25,7 +25,7 @@ export async function action(args: Route.ActionArgs) {
     );
   }
   // Invalidate cache
-  args.context.cf.ctx.waitUntil(
+  args.context.cloudflare.ctx.waitUntil(
     invalidateRuleCacheByKeyHash({
       hash: deletedKey.hash,
       id: deletedKey.id,

@@ -29,7 +29,7 @@ export async function action(args: Route.ActionArgs) {
   console.log("successfully updated key status:", updatedKey.id);
 
   // Invalidate cache
-  args.context.cf.ctx.waitUntil(
+  args.context.cloudflare.ctx.waitUntil(
     invalidateRuleCacheByKeyHash({
       hash: updatedKey.hash,
       id: updatedKey.id,

@@ -23,7 +23,7 @@ export async function action(args: Route.ActionArgs) {
     .delete(schema.rules)
     .where(and(eq(schema.rules.id, id), eq(schema.rules.userId, userId)));
   console.log(args.request.referrer);
-  args.context.cf.ctx.waitUntil(invalidateAllRulesCache(userId));
+  args.context.cloudflare.ctx.waitUntil(invalidateAllRulesCache(userId));
 
   if (shouldRedirect === "true") {
     const redirectUrl = new URL(RULES_ROUTE_PATH, args.request.url);

@@ -1,9 +1,62 @@
 import { cn } from "@/lib/utils";
-import { motion } from "motion/react";
-import * as Icons from "@/components/ui/icons";
 
 export const Logo = ({ className }: { className?: string }) => {
-  return <Icons.Cog className={cn("size-7 w-7", className)}></Icons.Cog>;
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="50"
+      height="50"
+      viewBox="0 0 28 30"
+      className={className}
+    >
+      <rect
+        x="10"
+        y="1"
+        width="8"
+        height="8"
+        rx="2"
+        ry="2"
+        fill="currentColor"
+      />
+
+      <line
+        x1="14"
+        y1="8"
+        x2="4"
+        y2="18"
+        stroke="currentColor"
+        strokeWidth="2"
+      />
+      <line
+        x1="14"
+        y1="8"
+        x2="24"
+        y2="18"
+        stroke="currentColor"
+        strokeWidth="2"
+      />
+
+      <rect
+        x="0"
+        y="17"
+        width="8"
+        height="12"
+        rx="2"
+        ry="2"
+        fill="currentColor"
+      />
+
+      <rect
+        x="20"
+        y="17"
+        width="8"
+        height="12"
+        rx="2"
+        ry="2"
+        fill="currentColor"
+      />
+    </svg>
+  );
 };
 
 export const LogoStroke = ({ className }: { className?: string }) => {

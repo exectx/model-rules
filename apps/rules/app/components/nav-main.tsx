@@ -37,7 +37,7 @@ export function NavMain({
 
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Platform</SidebarGroupLabel>
+      <SidebarGroupLabel>Console</SidebarGroupLabel>
       <SidebarMenu>
         {activeItems.map((item) => {
           return (
@@ -48,7 +48,7 @@ export function NavMain({
                   data-active={item.isActive}
                   tooltip={item.title}
                 >
-                  <Link to={item.url}>
+                  <Link to={item.url} prefetch="intent">
                     <item.icon />
                     <span>{item.title}</span>
                   </Link>

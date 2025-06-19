@@ -5,8 +5,11 @@ import { Footer } from "@/components/marketing/footer";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
+    {
+      name: "description",
+      content:
+        "Override LLM parameters before sending your API request to any OpenAI API compatible provider.",
+    },
   ];
 }
 

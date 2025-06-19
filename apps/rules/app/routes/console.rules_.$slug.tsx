@@ -67,7 +67,9 @@ export default function RulesPageLayout({ params }: Route.ComponentProps) {
             className="hover:bg-accent hover:text-foreground data-[state=active]:after:bg-primary text-muted-foreground data-[state=active]:hover:bg-accent relative after:absolute after:inset-x-0 after:bottom-0 after:-mb-1 after:h-0.5 data-[state=active]:bg-transparent data-[state=active]:shadow-none font-normal"
             asChild
           >
-            <Link to={ROUTE_PATH(slug)}>Overview</Link>
+            <Link to={ROUTE_PATH(slug)} prefetch="intent">
+              Overview
+            </Link>
           </TabsTrigger>
           <TabsTrigger
             value="metrics"
@@ -81,7 +83,9 @@ export default function RulesPageLayout({ params }: Route.ComponentProps) {
             className="hover:bg-accent hover:text-foreground data-[state=active]:after:bg-primary text-muted-foreground data-[state=active]:hover:bg-accent relative after:absolute after:inset-x-0 after:bottom-0 after:-mb-1 after:h-0.5 data-[state=active]:bg-transparent data-[state=active]:shadow-none font-normal"
             asChild
           >
-            <Link to={RULE_SETTINGS_ROUTE_PATH(slug)}>Settings</Link>
+            <Link to={RULE_SETTINGS_ROUTE_PATH(slug)} prefetch="intent">
+              Settings
+            </Link>
           </TabsTrigger>
         </TabsList>
       </Tabs>

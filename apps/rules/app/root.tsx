@@ -6,18 +6,82 @@ import {
   Scripts,
   ScrollRestoration,
   useLoaderData,
+  // type AppLoadContext,
 } from "react-router";
 import { ClerkProvider } from "@clerk/react-router";
 
 import type { Route } from "./+types/root";
 import globalStyles from "./app.css?url";
-import { rootAuthLoader } from "@clerk/react-router/ssr.server";
+// import { rootAuthLoader } from "@clerk/react-router/ssr.server";
 import { EpicProgress } from "./components/progress-bar";
 import { useOsTheme } from "./hooks/use-os-theme";
 import { dark } from "@clerk/themes";
+// import type { RequestStateWithRedirectUrls as _RequestStateWithRedirectUrls   } from "node_modules/@clerk/react-router/dist/ssr/types";
+import type { ClerkClient } from "@clerk/react-router/api.server";
+
+type Auth = ReturnType<
+  Awaited<ReturnType<ClerkClient["authenticateRequest"]>>["toAuth"]
+>;
+type RequestState = Awaited<ReturnType<ClerkClient["authenticateRequest"]>>;
+
+export const debugRequestState = (params: RequestState) => {
+  const {
+    isSignedIn,
+    isAuthenticated,
+    proxyUrl,
+    reason,
+    message,
+    publishableKey,
+    isSatellite,
+    domain,
+  } = params;
+  return {
+    isSignedIn,
+    isAuthenticated,
+    proxyUrl,
+    reason,
+    message,
+    publishableKey,
+    isSatellite,
+    domain,
+  };
+};
+
+// NOTE: custom clerk state object wrapper
+// https://github.com/clerk/javascript/blob/main/packages/react-router/src/ssr/utils.ts
+
+function getResponseClerkState(auth: Auth, requestState: RequestState) {
+  const clerkState = {
+    __clerk_ssr_state: auth,
+    __publishableKey: requestState.publishableKey,
+    __proxyUrl: requestState.proxyUrl,
+    __domain: requestState.domain,
+    __isSatellite: requestState.isSatellite,
+    __signInUrl: requestState.signInUrl,
+    __signUpUrl: requestState.signUpUrl,
+    __afterSignInUrl: requestState.afterSignInUrl,
+    __afterSignUpUrl: requestState.afterSignUpUrl,
+    // @ts-ignore
+    __signInForceRedirectUrl: requestState.signInForceRedirectUrl,
+    // @ts-ignore
+    __signUpForceRedirectUrl: requestState.signUpForceRedirectUrl,
+    // @ts-ignore
+    __signInFallbackRedirectUrl: requestState.signInFallbackRedirectUrl,
+    // @ts-ignore
+    __signUpFallbackRedirectUrl: requestState.signUpFallbackRedirectUrl,
+    __clerk_debug: debugRequestState(requestState),
+    __clerkJSUrl: import.meta.env.VITE_CLERK_JS_URL, //getPublicEnvVariables(context).clerkJsUrl,
+    __clerkJSVersion: import.meta.env.VITE_CLERK_JS_VERSION, //getPublicEnvVariables(context).clerkJsVersion,
+    __telemetryDisabled: import.meta.env.VITE_CLERK_TELEMETRY_DISABLED, //getPublicEnvVariables(context).telemetryDisabled,
+    __telemetryDebug: import.meta.env.VITE_CLERK_TELEMETRY_DEBUG, //getPublicEnvVariables(context).telemetryDebug,
+  };
+  return { clerkState: { __internal_clerk_state: clerkState } };
+}
 
 export async function loader(args: Route.LoaderArgs) {
-  return rootAuthLoader(args);
+  const { auth, _authRequestState } = args.context;
+  const data = getResponseClerkState(auth, _authRequestState);
+  return data;
 }
 
 export const links: Route.LinksFunction = () => [
@@ -49,7 +113,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Model Rules</title>
+        <title>Modelrules</title>
         <Meta />
         <Links />
         {import.meta.env.DEV && (
@@ -71,6 +135,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
 export default function App() {
   const loaderData = useLoaderData<typeof loader>();
   const theme = useOsTheme();
+  // return (
+  //   <>
+  //     <Outlet />
+  //     <EpicProgress />
+  //   </>
+  // );
   return (
     <ClerkProvider
       loaderData={loaderData}

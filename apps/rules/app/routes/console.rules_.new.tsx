@@ -136,7 +136,7 @@ export async function action(args: Route.ActionArgs) {
   }
   const encryptedData = await encrypt(
     submission.value.apiKey,
-    await buildKey(userId, args.context.cf.env.ENCRYPTION_KEY)
+    await buildKey(userId, args.context.cloudflare.env.ENCRYPTION_KEY)
   );
   const [result] = await db
     .insert(schema.rules)
@@ -180,7 +180,7 @@ export async function action(args: Route.ActionArgs) {
       );
     }
   });
-  args.context.cf.ctx.waitUntil(pendingCacheQueries);
+  args.context.cloudflare.ctx.waitUntil(pendingCacheQueries);
   return redirect(RULES_ROUTE_PATH);
 }
 

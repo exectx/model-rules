@@ -1,4 +1,11 @@
-import { BookOpen, House, Key, Columns3Cog } from "lucide-react";
+import {
+  BookOpen,
+  House,
+  Key,
+  Columns3Cog,
+  LifeBuoy,
+  Send,
+} from "lucide-react";
 
 export const sidebarMenus = {
   user: {
@@ -33,6 +40,17 @@ export const sidebarMenus = {
     },
   ],
   // No secondary navigation
-  navSecondary: [],
+  navSecondary: [
+    {
+      title: "Support",
+      url: "mailto:support@exectx.run?subject=Modelrules: ",
+      icon: LifeBuoy,
+    },
+    {
+      title: "Feedback",
+      url: "mailto:hello@exectx.run?subject=Modelrules Feedback: ",
+      icon: Send,
+    },
+  ],
   projects: [],
 };

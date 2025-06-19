@@ -27,7 +27,7 @@ export default function Features() {
 
             <CardContent>
               <p className="text-sm text-muted-foreground">
-                Create custom rules to overwrite your LM API parameters and
+                Create custom rules to overwrite your LLM API parameters and
                 apply them per model or provider.
               </p>
             </CardContent>

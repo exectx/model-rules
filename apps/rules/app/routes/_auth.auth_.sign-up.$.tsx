@@ -1,4 +1,4 @@
-import type { Route } from "./+types/_auth.auth_.sign-up";
+import type { Route } from "./+types/_auth.auth_.sign-up.$";
 import { redirect } from "react-router";
 import { SignUp } from "@clerk/react-router";
 

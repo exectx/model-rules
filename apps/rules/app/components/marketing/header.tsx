@@ -33,7 +33,7 @@ export const HeroHeader = () => {
           className={cn(
             "mx-auto mt-2 max-w-6xl border border-transparent px-6 transition-all duration-300 lg:px-12",
             isScrolled &&
-              "bg-background/50 max-w-4xl rounded-2xl border-border backdrop-blur-lg lg:px-5",
+              "bg-background/50 max-w-4xl rounded-2xl border-border backdrop-blur-lg lg:px-5"
           )}
         >
           <div className="relative flex flex-wrap items-center justify-between gap-6 py-3 lg:gap-0 lg:py-4">
@@ -43,7 +43,7 @@ export const HeroHeader = () => {
                 aria-label="home"
                 className="flex items-center space-x-2"
               >
-                <Logo />
+                <Logo className="size-5" />
               </Link>
 
               <button
@@ -89,7 +89,7 @@ export const HeroHeader = () => {
               <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit">
                 <Button asChild size="sm">
                   <Link to="/console">
-                    <span>Try ModelRules</span>
+                    <span>Try Modelrules</span>
                     <ChevronRight className="size-4" />
                   </Link>
                 </Button>

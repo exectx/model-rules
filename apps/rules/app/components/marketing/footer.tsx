@@ -15,7 +15,7 @@ export function Footer() {
             size="sm"
           >
             <Link to="/#" aria-label="home">
-              <Logo className="size-4" /> ModelRules
+              <Logo className="w-5" /> Modelrules
             </Link>
           </Button>
         </div>

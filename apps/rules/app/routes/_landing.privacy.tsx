@@ -7,22 +7,15 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export function loader({}: Route.LoaderArgs) {
-  return { updatedAt: new Date("05/10/2025").toLocaleDateString() };
-}
-
-export default function PrivacyPolicyPage({
-  loaderData: { updatedAt },
-}: Route.ComponentProps) {
+export default function PrivacyPolicyPage() {
+  const updatedAt = new Date("05/10/2025").toLocaleDateString();
   return (
     <div className="relative mx-auto max-w-3xl px-6 pt-40 lg:pb-16 md:pt-48">
       <h1 className="text-3xl font-light mb-8">
         Privacy Policy for ModelRules
       </h1>
 
-      <p className="text-sm text-muted-foreground mb-8">
-        Last Updated: {updatedAt}
-      </p>
+      <p className="text-sm text-muted-foreground mb-8">Last Updated: {updatedAt}</p>
 
       <section className="mb-10">
         <h2 className="text-2xl font-light mb-5">1. Introduction</h2>

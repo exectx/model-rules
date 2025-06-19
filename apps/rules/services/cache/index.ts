@@ -25,7 +25,7 @@ export function initCache(c: Context<HonoEnv>): UnkeyCache<CacheNamespaces> {
   });
 
   const cloudflareKV = new CloudflareKVStore<CacheNamespace, CacheNamespaces>({
-    cacheBuster: "v1",
+    cacheBuster: "v2",
     namespace: c.env.KVCache,
   });
 
@@ -44,7 +44,6 @@ export function initCache(c: Context<HonoEnv>): UnkeyCache<CacheNamespaces> {
       {
         ...namespaceOpts,
         fresh: 10 * 60 * 1000, // 10 minutes
-        stale: 30 * 60 * 1000, // 30 minutes
       }
     ),
     keyByHash: new Namespace<CacheNamespaces["keyByHash"]>(

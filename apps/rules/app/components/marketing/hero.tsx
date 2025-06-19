@@ -38,7 +38,7 @@ export function Hero() {
             as="h1"
             className="text-balance text-4xl font-light md:text-5xl lg:text-6xl"
           >
-            Rewrite Model Parameters and Route API requests
+            Rewrite LLM API parameters
           </TextEffect>
           <TextEffect
             per="line"
@@ -48,7 +48,7 @@ export function Hero() {
             as="p"
             className="mx-auto mt-6 max-w-2xl md:text-lg text-pretty text-muted-foreground"
           >
-            A rules engine to transform and route LM API requests
+            A rules engine to transform and route LLM API requests
           </TextEffect>
 
           <AnimatedGroup

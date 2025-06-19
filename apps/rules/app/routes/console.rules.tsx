@@ -127,6 +127,7 @@ const columns: ColumnDef<RuleItem>[] = [
         <Link
           to={`/console/rules/${rule.prefix}`}
           data-table-row-link
+          prefetch="intent"
           className="static -my-0.5 before:pointer-events-auto before:absolute before:left-0 before:top-0 before:z-0 before:block before:h-full before:w-full before:cursor-pointer flex w-full min-w-0 max-w-64 flex-col"
         >
           {rule.prefix}
@@ -169,7 +170,10 @@ const columns: ColumnDef<RuleItem>[] = [
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem asChild>
-                <Link to={`/console/rules/${rule.prefix}/settings`}>
+                <Link
+                  to={`/console/rules/${rule.prefix}/settings`}
+                  prefetch="intent"
+                >
                   <Settings className="size-4" />
                   Settings
                 </Link>

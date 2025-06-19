@@ -7,13 +7,8 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export function loader({}: Route.LoaderArgs) {
-  return { updatedAt: new Date("05/10/2025").toLocaleDateString() };
-}
-
-export default function TermsPage({
-  loaderData: { updatedAt },
-}: Route.ComponentProps) {
+export default function TermsPage({}: Route.ComponentProps) {
+  const updatedAt = new Date("05/10/2025").toLocaleDateString();
   return (
     <div className="relative mx-auto max-w-3xl px-6 pt-40 lg:pb-16 md:pt-48">
       <h1 className="text-3xl font-light mb-8">

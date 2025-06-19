@@ -12,7 +12,7 @@ import {
 
 declare module "react-router" {
   export interface AppLoadContext {
-    cf: {
+    cloudflare: {
       env: Env;
       ctx: ExecutionContext;
     };
@@ -20,6 +20,8 @@ declare module "react-router" {
     auth: ReturnType<
       Awaited<ReturnType<ClerkClient["authenticateRequest"]>>["toAuth"]
     >;
+    _authRequestState: Awaited<ReturnType<ClerkClient["authenticateRequest"]>>;
+
     // session: HonoEnv["Variables"]["session"];
   }
 }
@@ -54,14 +56,31 @@ app.use("*", async (c) => {
     return new Response(null, { status: 204 }); // Return empty response with 204 No Content
   }
   const { clerk } = c.get("services");
-  const auth = (await clerk.authenticateRequest(c.req.raw)).toAuth();
+  const authreq = await clerk.authenticateRequest(c.req.raw);
+  authreq.headers.forEach((value, key) => {
+    console.log("auth header", key, value);
+    c.res.headers.append(key, value);
+  });
+  // clerk.sig
+  authreq.signInUrl;
+  // for (const key in authreq.headers.entries()) {
+  //   console.log("auth header", key, authreq.headers.get(key));
+  //   // c.req.header(key, authreq.headers[key]);
+  // }
+  // authreq.headers;
+  // authreq.status
+  const auth = authreq.toAuth();
+
+  // authreq.
+  // const a= clerk.
   return reactRouterRequestHandler(c.req.raw, {
-    cf: {
+    cloudflare: {
       env: c.env,
       ctx: c.executionCtx,
     },
     services: c.get("services"),
     auth,
+    _authRequestState: authreq,
   });
 });
 export default app;

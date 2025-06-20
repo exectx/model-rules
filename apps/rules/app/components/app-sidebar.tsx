@@ -24,8 +24,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { auth: authSSR } = useShellData();
   const { user } = useUser();
   const { pathname } = useLocation();
-  const docsRoute = pathname.startsWith("/docs");
-  console.log({ docsRoute });
+  const docsRoute = pathname.endsWith("/docs") || pathname.startsWith("/docs/");
+  const consoleRoute =
+    pathname.endsWith("/console") || pathname.startsWith("/console/");
 
   return (
     <Sidebar variant="inset" {...props}>
@@ -56,11 +57,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        {docsRoute ? (
-          <NavDocs items={sidebarMenus.navDocs} />
-        ) : (
-          <NavMain items={sidebarMenus.navMain} />
-        )}
+        {docsRoute && <NavDocs items={sidebarMenus.navDocs} />}
+        {consoleRoute && <NavMain items={sidebarMenus.navMain} />}
         <NavSecondary items={sidebarMenus.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>

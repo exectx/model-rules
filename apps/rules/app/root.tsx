@@ -6,17 +6,14 @@ import {
   Scripts,
   ScrollRestoration,
   useLoaderData,
-  // type AppLoadContext,
 } from "react-router";
 import { ClerkProvider } from "@clerk/react-router";
 
 import type { Route } from "./+types/root";
 import globalStyles from "./app.css?url";
-// import { rootAuthLoader } from "@clerk/react-router/ssr.server";
 import { EpicProgress } from "./components/progress-bar";
 import { useOsTheme } from "./hooks/use-os-theme";
 import { dark } from "@clerk/themes";
-// import type { RequestStateWithRedirectUrls as _RequestStateWithRedirectUrls   } from "node_modules/@clerk/react-router/dist/ssr/types";
 import type { ClerkClient } from "@clerk/react-router/api.server";
 
 type Auth = ReturnType<

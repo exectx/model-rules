@@ -1,7 +1,4 @@
-import { CodeBlock } from "@/components/custom/codeblock";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { BoxIcon, HouseIcon, PanelsTopLeftIcon } from "lucide-react";
-import type { Route } from "./+types/_shell.docs";
+import type { Route } from "./+types/_shell.docs._index";
 import * as cookieTool from "cookie-es";
 import { CodeSnippets } from "@/components/custom/code-snippet";
 import { useLoaderData } from "react-router";
@@ -53,7 +50,7 @@ const snippets = [
     import OpenAI from "openai";
 
     const openai = new OpenAI({
-      apiKey: process.env.RULES_API_KEY, // or your Rules API key
+      apiKey: process.env.RULES_API_KEY,
       baseURL: "https://rules.exectx.run/api",
     });
 

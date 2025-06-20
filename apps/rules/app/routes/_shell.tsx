@@ -14,10 +14,10 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { useBreadcrumbs } from "@/hooks/use-breadcrumbs";
-import { Outlet, useLoaderData } from "react-router";
+import { Outlet, useLoaderData, useRouteLoaderData } from "react-router";
 import { useLocation } from "react-router";
 import { Link } from "react-router";
-import type { Route } from "./+types/console";
+import type { Route } from "./+types/_shell";
 import * as cookieTool from "cookie-es";
 
 function Breadcrumbs() {
@@ -49,16 +49,26 @@ function Breadcrumbs() {
   );
 }
 
+// type SOO = SignedOut
 export async function loader(args: Route.LoaderArgs) {
   const cookieHeader = args.request.headers.get("cookie");
   const cookies = cookieTool.parse(cookieHeader ?? "");
-  return { defaultOpen: cookies["sidebar_state"] === "true" };
+  const auth = Boolean(args.context.auth?.userId);
+  return { sideBarOpen: cookies["sidebar_state"] === "true", auth };
+}
+
+export function useShellData() {
+  const data = useRouteLoaderData<typeof loader>("routes/_shell");
+  if (!data) {
+    throw new Error("No shell data found");
+  }
+  return data;
 }
 
 export default function Page() {
-  const { defaultOpen } = useLoaderData<typeof loader>();
+  const { sideBarOpen } = useLoaderData<typeof loader>();
   return (
-    <SidebarProvider defaultOpen={defaultOpen}>
+    <SidebarProvider defaultOpen={sideBarOpen}>
       <AppSidebar />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2">

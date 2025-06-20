@@ -11,19 +11,22 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { sidebarMenus } from "@/data/sidebar-menus";
-import type { Route } from "../routes/+types/console";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 import { useUser } from "@clerk/react-router";
 import { getUserShapeFromClient } from "@/lib/clerk-utils";
 import { Logo } from "./logo";
 import { Skeleton } from "./ui/skeleton";
-import { Badge } from "./ui/badge";
 import { NavSecondary } from "./nav-secondary";
-
-export async function loader(args: Route.LoaderArgs) {}
+import { NavDocs } from "./nav-docs";
+import { useShellData } from "@/routes/_shell";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { auth: authSSR } = useShellData();
   const { user } = useUser();
+  const { pathname } = useLocation();
+  const docsRoute = pathname.startsWith("/docs");
+  console.log({ docsRoute });
+
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
@@ -39,7 +42,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg"
                   aria-hidden="true"
                 >
-                  {/* <Zap className="size-4" /> */}
                   <Logo className="size-5" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
@@ -54,20 +56,36 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={sidebarMenus.navMain} />
+        {docsRoute ? (
+          <NavDocs items={sidebarMenus.navDocs} />
+        ) : (
+          <NavMain items={sidebarMenus.navMain} />
+        )}
         <NavSecondary items={sidebarMenus.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        {user ? (
-          <NavUser user={getUserShapeFromClient(user)} />
-        ) : (
-          <div className="h-12 p-2 flex gap-2 items-center border rounded-md">
-            <Skeleton className="h-8 w-8 shrink-0" />
-            <div className="space-y-2 flex-1">
-              <Skeleton className="h-3 w-full" />
-              <Skeleton className="h-3 w-full" />
+        {authSSR ? (
+          user ? (
+            <NavUser user={getUserShapeFromClient(user)} />
+          ) : (
+            <div className="h-12 p-2 flex gap-2 items-center border rounded-md">
+              <Skeleton className="h-8 w-8 shrink-0" />
+              <div className="space-y-2 flex-1">
+                <Skeleton className="h-3 w-full" />
+                <Skeleton className="h-3 w-full" />
+              </div>
             </div>
-          </div>
+          )
+        ) : (
+          <button
+            className="h-10 w-full rounded-md bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition"
+            onClick={() => {
+              window.location.href = "/_auth.auth_.sign-in";
+            }}
+            type="button"
+          >
+            Sign in
+          </button>
         )}
       </SidebarFooter>
     </Sidebar>

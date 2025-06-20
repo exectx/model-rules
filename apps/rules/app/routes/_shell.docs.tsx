@@ -1,4 +1,11 @@
 import { CodeBlock } from "@/components/custom/codeblock";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { BoxIcon, HouseIcon, PanelsTopLeftIcon } from "lucide-react";
+import type { Route } from "./+types/_shell.docs";
+import * as cookieTool from "cookie-es";
+import { CodeSnippets } from "@/components/custom/code-snippet";
+import { useLoaderData } from "react-router";
+import type { BundledLanguage } from "shiki/bundle/web";
 
 function dedent(str: string) {
   const lines = str.split("\n");
@@ -90,8 +97,7 @@ const snippets = [
     print(chat_completion.choices[0].message.content)
   `),
   },
-] as const;
-
+] satisfies Array<{ title: string; lang: BundledLanguage; code: string }>;
 
 // NOTE: for prerendering, we need to disable the loading of WASM in the loader based on the previous attempt to prerender
 // export async function loader() {
@@ -123,39 +129,31 @@ const snippets = [
 //   );
 // }
 
+export async function loader(args: Route.LoaderArgs) {
+  const cookieHeader = args.request.headers.get("cookie");
+  const cookies = cookieTool.parse(cookieHeader ?? "");
+  return { lang: cookies["default_lang"] as string | undefined };
+}
+
 export default function DocsPage() {
   // const { highlightedSnippets } = useLoaderData<typeof loader>();
   const highlightedSnippets = snippets;
+  const { lang } = useLoaderData<typeof loader>();
   return (
     <div className="p-4">
-      <div className="flex flex-col gap-4 md:gap-6 max-w-5xl mx-auto w-full">
-        <h1 className="text-3xl font-light">API Documentation</h1>
+      <div className="flex flex-col gap-4 md:gap-6 max-w-4xl mx-auto w-full">
+        <h1 className="text-3xl font-light">Overview</h1>
         <div>
           <p className="">
             Rewrite LLM API parameters according to user defined rules, and
             route them to the corresponding LLM endpoint.
           </p>
         </div>
-        <div className=" grid gap-4 p-4 rounded-4xl border">
-          {highlightedSnippets.map((snippet) => (
-            <div key={snippet.title} className="rounded-2xl border min-w-0">
-              <h2 className="font-medium">{snippet.title}</h2>
-              <div className="text-sm font-mono [&_pre]:overflow-auto [&_pre]:p-2">
-                <CodeBlock
-                  lang={snippet.lang}
-                  code={snippet.code}
-                  initial={
-                    <pre>
-                      <code>{snippet.code}</code>
-                    </pre>
-                  }
-                />
-              </div>
-              {/* Uncomment the line below to render raw HTML if needed */}
-              {/* <div dangerouslySetInnerHTML={{ __html: snippet.code }} className="text-sm" /> */}
-            </div>
-          ))}
-        </div>
+
+        <CodeSnippets
+          defaultValue={lang ?? "cURL"}
+          snippets={highlightedSnippets}
+        />
       </div>
     </div>
   );

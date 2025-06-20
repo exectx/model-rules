@@ -5,6 +5,7 @@ import {
   Columns3Cog,
   LifeBuoy,
   Send,
+  Book,
 } from "lucide-react";
 
 export const sidebarMenus = {
@@ -37,6 +38,18 @@ export const sidebarMenus = {
       title: "Documentation",
       url: "/docs",
       icon: BookOpen,
+    },
+  ],
+  navDocs: [
+    {
+      title: "Overview",
+      url: "/docs",
+      icon: House,
+    },
+    {
+      title: "Quickstart",
+      url: "/docs/quickstart",
+      icon: Book,
     },
   ],
   // No secondary navigation

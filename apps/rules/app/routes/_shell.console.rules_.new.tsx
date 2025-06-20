@@ -6,7 +6,7 @@ import {
   useForm,
 } from "@conform-to/react";
 import { data, Form, redirect, useActionData } from "react-router";
-import type { Route } from "./+types/console.rules_.new";
+import type { Route } from "./+types/_shell.console.rules_.new";
 // import { appContext } from "@/lib/app-context";
 // import { ProviderRoute } from "@exectx/utils/route";
 import * as v from "valibot";
@@ -32,7 +32,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { safeTry } from "@exectx/utils";
 import { ModelRulesSchema, ProviderRulesSchema } from "@exectx/schema/rules";
 import { schema } from "@exectx/db";
-import { ROUTE_PATH as RULES_ROUTE_PATH } from "./console.rules";
+import { ROUTE_PATH as RULES_ROUTE_PATH } from "./_shell.console.rules";
 import { buildKey, encrypt } from "@exectx/crypto/aes";
 import { useIsPending } from "@/hooks/use-is-pending";
 import { Spinner } from "@/components/ui/spinner";

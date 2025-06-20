@@ -1,10 +1,10 @@
 import { data, redirect } from "react-router";
-import type { Route } from "./+types/console.rules_.delete.$id";
+import type { Route } from "./+types/_shell.console.rules_.delete.$id";
 import { parseWithValibot } from "@conform-to/valibot";
 import { and, eq, schema } from "@exectx/db";
 import { safeTry } from "@exectx/utils";
 import { invalidateAllRulesCache } from "@/lib/cache-utils";
-import { ROUTE_PATH as RULES_ROUTE_PATH } from "./console.rules";
+import { ROUTE_PATH as RULES_ROUTE_PATH } from "./_shell.console.rules";
 
 export const ROUTE_PATH = (id: string) => `/console/rules/delete/${id}`;
 

@@ -1,0 +1,87 @@
+
+import { ChevronRight, type LucideIcon } from "lucide-react";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import {
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarMenu,
+  SidebarMenuAction,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
+} from "@/components/ui/sidebar";
+import { Link } from "react-router";
+import { useActiveMenu } from "@/hooks/use-active-menu";
+
+export function NavDocs({
+  items,
+}: {
+  items: {
+    title: string;
+    url: string;
+    icon: LucideIcon;
+    isActive?: boolean;
+    hasSubRoutes?: boolean;
+    items?: {
+      title: string;
+      url: string;
+    }[];
+  }[];
+}) {
+  const { activeItems } = useActiveMenu(items);
+
+  return (
+    <SidebarGroup>
+      <SidebarGroupLabel>Documentation</SidebarGroupLabel>
+      <SidebarMenu>
+        {activeItems.map((item) => {
+          return (
+            <Collapsible key={item.title} asChild defaultOpen={item.isActive}>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  data-active={item.isActive}
+                  tooltip={item.title}
+                >
+                  <Link to={item.url} prefetch="intent">
+                    <item.icon />
+                    <span>{item.title}</span>
+                  </Link>
+                </SidebarMenuButton>
+                {item.items?.length ? (
+                  <>
+                    <CollapsibleTrigger asChild>
+                      <SidebarMenuAction className="data-[state=open]:rotate-90">
+                        <ChevronRight />
+                        <span className="sr-only">Toggle</span>
+                      </SidebarMenuAction>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                      <SidebarMenuSub>
+                        {item.items?.map((subItem) => (
+                          <SidebarMenuSubItem key={subItem.title}>
+                            <SidebarMenuSubButton asChild>
+                              <Link to={subItem.url}>
+                                <span>{subItem.title}</span>
+                              </Link>
+                            </SidebarMenuSubButton>
+                          </SidebarMenuSubItem>
+                        ))}
+                      </SidebarMenuSub>
+                    </CollapsibleContent>
+                  </>
+                ) : null}
+              </SidebarMenuItem>
+            </Collapsible>
+          );
+        })}
+      </SidebarMenu>
+    </SidebarGroup>
+  );
+}

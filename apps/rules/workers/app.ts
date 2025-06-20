@@ -58,21 +58,9 @@ app.use("*", async (c) => {
   const { clerk } = c.get("services");
   const authreq = await clerk.authenticateRequest(c.req.raw);
   authreq.headers.forEach((value, key) => {
-    console.log("auth header", key, value);
     c.res.headers.append(key, value);
   });
-  // clerk.sig
-  authreq.signInUrl;
-  // for (const key in authreq.headers.entries()) {
-  //   console.log("auth header", key, authreq.headers.get(key));
-  //   // c.req.header(key, authreq.headers[key]);
-  // }
-  // authreq.headers;
-  // authreq.status
   const auth = authreq.toAuth();
-
-  // authreq.
-  // const a= clerk.
   return reactRouterRequestHandler(c.req.raw, {
     cloudflare: {
       env: c.env,

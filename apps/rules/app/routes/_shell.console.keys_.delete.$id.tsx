@@ -1,5 +1,5 @@
 import { data, redirect } from "react-router";
-import type { Route } from "./+types/console.keys_.delete.$id";
+import type { Route } from "./+types/_shell.console.keys_.delete.$id";
 import { and, eq, schema } from "@exectx/db";
 import { invalidateRuleCacheByKeyHash } from "@/lib/cache-utils";
 

@@ -13,7 +13,7 @@ import {
   useFetchers,
   useLoaderData,
 } from "react-router";
-import type { Route } from "./+types/console.keys";
+import type { Route } from "./+types/_shell.console.keys";
 import * as v from "valibot";
 import { Input } from "@/components/ui/input";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -63,8 +63,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { generateApiKey } from "@exectx/crypto/gen-key";
 import { eq, schema, type Key } from "@exectx/db";
-import { ROUTE_PATH as DELETE_KEY_ROUTE_PATH } from "./console.keys_.delete.$id";
-import { ROUTE_PATH as UPDATE_KEY_STATUS_ROUTE_PATH } from "./console.keys_.update-status.$id";
+import { ROUTE_PATH as DELETE_KEY_ROUTE_PATH } from "./_shell.console.keys_.delete.$id";
+import { ROUTE_PATH as UPDATE_KEY_STATUS_ROUTE_PATH } from "./_shell.console.keys_.update-status.$id";
 import { Badge } from "@/components/ui/badge";
 import { Spinner } from "@/components/ui/spinner";
 import { InputField } from "@/components/forms";

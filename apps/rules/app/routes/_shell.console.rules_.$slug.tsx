@@ -8,9 +8,9 @@ import {
   useLocation,
   useRouteLoaderData,
 } from "react-router";
-import type { Route } from "./+types/console.rules_.$slug";
-import { ROUTE_PATH as RULES_ROUTE_PATH } from "./console.rules";
-import { ROUTE_PATH as RULE_SETTINGS_ROUTE_PATH } from "./console.rules_.$slug.settings";
+import type { Route } from "./+types/_shell.console.rules_.$slug";
+import { ROUTE_PATH as RULES_ROUTE_PATH } from "./_shell.console.rules";
+import { ROUTE_PATH as RULE_SETTINGS_ROUTE_PATH } from "./_shell.console.rules_.$slug.settings";
 
 export const ROUTE_PATH = (slug: string) => `/console/rules/${slug}`;
 
@@ -41,7 +41,9 @@ export async function loader(args: Route.LoaderArgs) {
 }
 
 export function useRuleData() {
-  const data = useRouteLoaderData<typeof loader>("routes/console.rules_.$slug");
+  const data = useRouteLoaderData<typeof loader>(
+    "routes/_shell.console.rules_.$slug"
+  );
   if (!data) {
     throw new Error("No rule data found");
   }

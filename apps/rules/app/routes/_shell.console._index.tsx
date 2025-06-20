@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Link, useLoaderData, redirect, data } from "react-router";
-import type { Route } from "./+types/console._index";
+import type { Route } from "./+types/_shell.console._index";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getDisplayName } from "@/lib/clerk-utils";
 

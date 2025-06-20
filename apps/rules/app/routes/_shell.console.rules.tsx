@@ -1,5 +1,4 @@
 import {
-  Form,
   Link,
   useLoaderData,
   redirect,
@@ -7,7 +6,7 @@ import {
   data,
   useFetchers,
 } from "react-router";
-import type { Route } from "./+types/console.rules";
+import type { Route } from "./+types/_shell.console.rules";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Table,
@@ -18,19 +17,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { eq, schema } from "@exectx/db";
-import { getAuth } from "@clerk/react-router/ssr.server";
-import {
-  Ban,
-  CheckCircle,
-  Edit,
-  MoreHorizontal,
-  Pencil,
-  Plus,
-  Settings,
-  Star,
-  Trash2,
-  XCircle,
-} from "lucide-react";
+import { MoreHorizontal, Plus, Settings, Trash2 } from "lucide-react";
 import {
   flexRender,
   getCoreRowModel,
@@ -57,7 +44,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import * as v from "valibot";
 import { parseWithValibot } from "@conform-to/valibot";
-import { ROUTE_PATH as DELETE_RULE_ROUTE_PATH } from "./console.rules_.delete.$id";
+import { ROUTE_PATH as DELETE_RULE_ROUTE_PATH } from "./_shell.console.rules_.delete.$id";
 
 export const ROUTE_PATH = "/console/rules";
 

@@ -5,7 +5,7 @@ import {
   useNavigation,
   useSubmit,
 } from "react-router";
-import { ROUTE_PATH as RULES_ROUTE_PATH } from "./console.rules";
+import { ROUTE_PATH as RULES_ROUTE_PATH } from "./_shell.console.rules";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -46,7 +46,7 @@ import { ErrorField, InputField, TextareaField } from "@/components/forms";
 import { cn } from "@/lib/utils";
 import { redirect, data } from "react-router";
 import { and, eq, isNull, schema } from "@exectx/db";
-import type { Route } from "./+types/console.rules_.$slug.settings";
+import type { Route } from "./+types/_shell.console.rules_.$slug.settings";
 import { Eye, EyeOff, Pencil } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
 import * as React from "react";
@@ -59,14 +59,14 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { buildKey, encrypt } from "@exectx/crypto/aes";
-import { useRuleData } from "./console.rules_.$slug";
+import { useRuleData } from "./_shell.console.rules_.$slug";
 import {
   baseUrlSchema,
   modelRulesFormSchema,
   providerRulesFormSchema,
   rulesetPrefixSchema,
-} from "./console.rules_.new";
-import { ROUTE_PATH as DELETE_RULE_ROUTE_PATH } from "./console.rules_.delete.$id";
+} from "./_shell.console.rules_.new";
+import { ROUTE_PATH as DELETE_RULE_ROUTE_PATH } from "./_shell.console.rules_.delete.$id";
 import { useIsPending } from "@/hooks/use-is-pending";
 import { invalidateAllRulesCache } from "@/lib/cache-utils";
 import { Spinner } from "@/components/ui/spinner";

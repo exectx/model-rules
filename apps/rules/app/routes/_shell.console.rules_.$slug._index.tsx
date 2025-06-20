@@ -1,6 +1,6 @@
 import { data, Link, redirect, useLoaderData } from "react-router";
-import type { Route } from "./+types/console.rules_.$slug._index";
-import { ROUTE_PATH as RULES_ROUTE_PATH } from "./console.rules";
+import type { Route } from "./+types/_shell.console.rules_.$slug._index";
+import { ROUTE_PATH as RULES_ROUTE_PATH } from "./_shell.console.rules";
 import {
   Card,
   CardContent,
@@ -20,8 +20,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Copy, Pencil } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
-import { ROUTE_PATH as EDIT_RULES_ROUTE_PATH } from "./console.rules_.$slug.settings";
-import { useRuleData } from "./console.rules_.$slug";
+import { ROUTE_PATH as EDIT_RULES_ROUTE_PATH } from "./_shell.console.rules_.$slug.settings";
+import { useRuleData } from "./_shell.console.rules_.$slug";
 
 export default function RuleSetPage() {
   const ruleset = useRuleData();

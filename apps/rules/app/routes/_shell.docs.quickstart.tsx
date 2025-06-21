@@ -12,19 +12,6 @@ export async function loader(args: Route.LoaderArgs) {
   return { lang: cookies["default_lang"] as string | undefined };
 }
 
-/**
- * Quickstart
- *
- * Renders a concise introduction to the Modelrules API, illustrating how it
- * seamlessly overrides OpenAI-compatible LLM parameters. Ideal for environments
- * where client-side SDKs have limited configurability.
- *
- * All parameter customization is performed server-side. While the app could be
- * run locally, it is provided as a hosted service for simplicity and broad
- * accessibility.
- *
- * @returns JSX.Element containing the quickstart documentation layout
- */
 export default function Quickstart() {
   const { lang } = useLoaderData<typeof loader>();
   return (

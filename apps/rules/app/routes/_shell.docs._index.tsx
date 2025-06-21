@@ -27,7 +27,7 @@ function dedent(str: string) {
   return lines.map((line) => line.slice(minIndent)).join("\n");
 }
 
-const snippets = [
+export const snippets = [
   {
     title: "cURL",
     lang: "bash",
@@ -133,7 +133,6 @@ export async function loader(args: Route.LoaderArgs) {
 }
 
 export default function DocsPage() {
-  // const { highlightedSnippets } = useLoaderData<typeof loader>();
   const highlightedSnippets = snippets;
   const { lang } = useLoaderData<typeof loader>();
   return (
@@ -141,9 +140,10 @@ export default function DocsPage() {
       <div className="flex flex-col gap-4 md:gap-6 max-w-4xl mx-auto w-full">
         <h1 className="text-3xl font-light">Overview</h1>
         <div>
-          <p className="">
-            Rewrite LLM API parameters according to user defined rules, and
-            route them to the corresponding LLM endpoint.
+          <p>
+            Modelrules is a ruleset engine that rewrites LLM API parameters
+            according to user-defined rules and routes them to the configured
+            LLM endpoint provider.
           </p>
         </div>
 

@@ -19,6 +19,7 @@ import { Skeleton } from "./ui/skeleton";
 import { NavSecondary } from "./nav-secondary";
 import { NavDocs } from "./nav-docs";
 import { useShellData } from "@/routes/_shell";
+import { Button } from "./ui/button";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { auth: authSSR } = useShellData();
@@ -75,15 +76,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </div>
           )
         ) : (
-          <button
-            className="h-10 w-full rounded-md bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition"
-            onClick={() => {
-              window.location.href = "/_auth.auth_.sign-in";
-            }}
-            type="button"
-          >
-            Sign in
-          </button>
+          <Button asChild>
+            <Link to={"/auth/sign-in"} >
+              Sign in
+            </Link>
+          </Button>
         )}
       </SidebarFooter>
     </Sidebar>

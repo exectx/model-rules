@@ -10,8 +10,17 @@ import {
   isNull,
 } from "@exectx/db";
 import { buildKey, decrypt } from "@exectx/crypto/aes";
+import { cors } from "hono/cors";
 
 export function addRulesApi(app: App) {
+  app.use(
+    "/api/*",
+    cors({
+      origin: "*",
+      allowHeaders: ["Content-Type", "Authorization"],
+      credentials: true,
+    })
+  );
   app.use("/api/*", async (c) => {
     const { db, cache } = c.get("services");
     if (c.req.method !== "POST") {

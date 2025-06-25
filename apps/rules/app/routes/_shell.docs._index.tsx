@@ -3,31 +3,9 @@ import * as cookieTool from "cookie-es";
 import { CodeSnippets } from "@/components/custom/code-snippet";
 import { useLoaderData } from "react-router";
 import type { BundledLanguage } from "shiki/bundle/web";
+import { dedent } from "@/lib/utils";
 
-function dedent(str: string) {
-  const lines = str.split("\n");
-
-  if (lines[0].trim() === "") {
-    lines.shift();
-  }
-  if (lines.length > 0 && lines[lines.length - 1].trim() === "") {
-    lines.pop();
-  }
-
-  const minIndent = Math.min(
-    ...lines
-      .filter((line) => line.trim())
-      .map((line) => line.match(/^\s*/)?.[0].length ?? 0)
-  );
-
-  if (minIndent === Infinity) {
-    return lines.join("\n");
-  }
-
-  return lines.map((line) => line.slice(minIndent)).join("\n");
-}
-
-export const snippets = [
+const snippets = [
   {
     title: "cURL",
     lang: "bash",
@@ -137,20 +115,22 @@ export default function DocsPage() {
   const { lang } = useLoaderData<typeof loader>();
   return (
     <div className="p-4">
-      <div className="flex flex-col gap-4 md:gap-6 max-w-4xl mx-auto w-full">
-        <h1 className="text-3xl font-light">Overview</h1>
-        <div>
-          <p>
-            Modelrules is a ruleset engine that rewrites LLM API parameters
-            according to user-defined rules and routes them to the configured
-            LLM endpoint provider.
-          </p>
+      <div className="flex flex-col gap-8 md:gap-12 max-w-4xl mx-auto w-full">
+        <div className="space-y-8">
+          <h1 className="text-4xl font-light">Overview</h1>
+          <div className="space-y-4">
+            <p>
+              Modelrules is a ruleset engine that rewrites LLM API parameters
+              according to user-defined rules and routes them to the configured
+              LLM endpoint provider.
+            </p>
+            <p>Here you have an example of how to use the Modelrules API:</p>
+          </div>
+          <CodeSnippets
+            defaultValue={lang ?? "cURL"}
+            snippets={highlightedSnippets}
+          />
         </div>
-
-        <CodeSnippets
-          defaultValue={lang ?? "cURL"}
-          snippets={highlightedSnippets}
-        />
       </div>
     </div>
   );

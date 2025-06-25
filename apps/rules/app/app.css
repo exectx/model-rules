@@ -188,20 +188,14 @@ body {
   --sidebar-ring: hsl(217.2 91.2% 59.8%);
 }
 
-/* Grid background pattern */
-.bg-grid-primary\/5 {
-  background-image:
-    linear-gradient(to right, var(--primary) / 0.05 1px, transparent 1px),
-    linear-gradient(to bottom, var(--primary) / 0.05 1px, transparent 1px);
-}
-
 :root {
   interpolate-size: allow-keywords;
   [class*="animate-"] {
     animation-fill-mode: forwards;
   }
 }
-.shiki, .shiki span {
+.shiki,
+.shiki span {
   background-color: transparent !important;
 }
 

@@ -59,7 +59,11 @@ export async function loader(args: Route.LoaderArgs) {
   const cookieHeader = args.request.headers.get("cookie");
   const cookies = cookieTool.parse(cookieHeader ?? "");
   const auth = Boolean(args.context.auth?.userId);
-  return { sideBarOpen: cookies["sidebar_state"] === "true", auth };
+  let sideBarOpen = cookies["sidebar_state"];
+  if (sideBarOpen !== "true" && sideBarOpen !== "false") {
+    sideBarOpen = "true";
+  }
+  return { sideBarOpen: sideBarOpen === "true", auth };
 }
 
 export function useShellData() {

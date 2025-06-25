@@ -90,14 +90,24 @@ export const links: Route.LinksFunction = () => [
     href: "https://fonts.gstatic.com",
     crossOrigin: "anonymous",
   },
-  {
-    rel: "stylesheet",
-    href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
-  },
+  // {
+  //   rel: "stylesheet",
+  //   href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
+  // },
   {
     rel: "stylesheet",
     href: "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@100;200;300;400;500;600;700&family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&display=swap",
   },
+  { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
+  {
+    rel: "icon",
+    type: "image/png",
+    href: "/favicon-96x96.png",
+    sizes: "96x96",
+  },
+  // { rel: "shortcut icon", type: "image/png", href: "/favicon.ico" },
+  { rel: "apple-touch-icon", sizes: "180x180", href: "/apple-touch-icon.png" },
+  { rel: "manifest", href: "/site.webmanifest" },
   // <link
   //   href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@100;200;300;400;500;600;700&family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&display=swap"
   //   rel="stylesheet"
@@ -132,12 +142,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
 export default function App() {
   const loaderData = useLoaderData<typeof loader>();
   const theme = useOsTheme();
-  // return (
-  //   <>
-  //     <Outlet />
-  //     <EpicProgress />
-  //   </>
-  // );
   return (
     <ClerkProvider
       loaderData={loaderData}

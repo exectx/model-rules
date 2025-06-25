@@ -1,3 +1,4 @@
+import { GithubIcon } from "@/components/ui/icons";
 import {
   BookOpen,
   House,
@@ -54,6 +55,11 @@ export const sidebarMenus = {
   ],
   // No secondary navigation
   navSecondary: [
+    {
+      title: "GitHub",
+      url: "https://github.com/exectx/model-rules",
+      icon: GithubIcon
+    },
     {
       title: "Support",
       url: "mailto:support@exectx.run?subject=Modelrules: ",

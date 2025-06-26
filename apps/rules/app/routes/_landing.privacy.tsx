@@ -2,26 +2,28 @@ import type { Route } from "./+types/_landing.privacy"; // Assuming you might ha
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "Privacy Policy - ModelRules" },
-    { name: "description", content: "Privacy Policy for ModelRules" },
+    { title: "Privacy Policy - Modelrules" },
+    { name: "description", content: "Privacy Policy for Modelrules" },
   ];
 }
 
 export default function PrivacyPolicyPage() {
-  const updatedAt = new Date("05/10/2025").toLocaleDateString();
+  const updatedAt = new Date("06/26/2025").toLocaleDateString();
   return (
     <div className="relative mx-auto max-w-3xl px-6 pt-40 lg:pb-16 md:pt-48">
       <h1 className="text-3xl font-light mb-8">
-        Privacy Policy for ModelRules
+        Privacy Policy for Modelrules
       </h1>
 
-      <p className="text-sm text-muted-foreground mb-8">Last Updated: {updatedAt}</p>
+      <p className="text-sm text-muted-foreground mb-8">
+        Last Updated: {updatedAt}
+      </p>
 
       <section className="mb-10">
         <h2 className="text-2xl font-light mb-5">1. Introduction</h2>
         <p>
           This Privacy Policy explains how the project maintainers collect, use,
-          and protect information when you use ModelRules ("the Service"). This
+          and protect information when you use Modelrules ("the Service"). This
           policy applies to all users of the Service.
         </p>
       </section>
@@ -34,16 +36,16 @@ export default function PrivacyPolicyPage() {
         </h3>
         <ul className="list-disc pl-6 space-y-3">
           <li>
-            <strong className="font-medium">Account information</strong>: Email
-            address and authentication credentials.
+            <strong>Account Information</strong>: Email address and
+            authentication credentials.
           </li>
           <li>
-            <strong className="font-medium">Configuration data</strong>:
-            Provider routes, parameter overrides, and other settings.
+            <strong>Configuration Data</strong>: Provider routes, parameter
+            overrides, and other settings.
           </li>
           <li>
-            <strong className="font-medium">API keys</strong>: Keys for
-            third-party services that you choose to store in ModelRules.
+            <strong>API Keys</strong>: Keys for third-party services that you
+            choose to store in Modelrules.
           </li>
         </ul>
 

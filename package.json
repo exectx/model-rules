@@ -1,6 +1,7 @@
 {
   "name": "model-rules",
   "description": "Rules engine for LLM APIs",
+  "license": "MIT",
   "cloudflare": {
     "label": "React Router Framework Starter",
     "products": [
@@ -43,7 +44,6 @@
       }
     }
   },
-  "private": true,
   "scripts": {
     "build": "pnpm --filter @exectx/rules build",
     "typecheck": "pnpm --filter @exectx/rules typecheck"

@@ -2,17 +2,17 @@ import type { Route } from "./+types/_landing.terms";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "Terms of Service - ModelRules" },
-    { name: "description", content: "Terms of Service for ModelRules" },
+    { title: "Terms of Service - Modelrules" },
+    { name: "description", content: "Terms of Service for Modelrules" },
   ];
 }
 
 export default function TermsPage({}: Route.ComponentProps) {
-  const updatedAt = new Date("05/10/2025").toLocaleDateString();
+  const updatedAt = new Date("06/26/2025").toLocaleDateString();
   return (
     <div className="relative mx-auto max-w-3xl px-6 pt-40 lg:pb-16 md:pt-48">
       <h1 className="text-3xl font-light mb-8">
-        Terms of Service for ModelRules
+        Terms of Service for Modelrules
       </h1>
 
       <p className="text-sm text-muted-foreground mb-8">
@@ -22,12 +22,12 @@ export default function TermsPage({}: Route.ComponentProps) {
       <section className="mb-10">
         <h2 className="text-2xl font-light mb-5">1. Introduction</h2>
         <p className="mb-4">
-          Welcome to ModelRules ("the Service"), an open-source software
-          provided under the Apache License 2.0. By accessing or using
-          ModelRules, you agree to be bound by these Terms of Service ("Terms").
+          Welcome to Modelrules ("the Service"), an open-source software
+          provided under the MIT License. By accessing or using Modelrules, you
+          agree to be bound by these Terms of Service ("Terms").
         </p>
         <p>
-          ModelRules is maintained by the project contributors and is provided
+          Modelrules is maintained by the project contributors and is provided
           free of charge with no subscription fees or payments required.
         </p>
       </section>
@@ -36,16 +36,16 @@ export default function TermsPage({}: Route.ComponentProps) {
         <h2 className="text-2xl font-light mb-5">2. Definitions</h2>
         <ul className="list-disc pl-6 space-y-3">
           <li>
-            <strong className="font-medium">Service</strong>: The ModelRules
-            software, API, and related components.
+            <strong>Service</strong>: The Modelrules software, API, and related
+            components.
           </li>
           <li>
-            <strong className="font-medium">User</strong>: Any individual or
-            entity that uses the Service.
+            <strong>User</strong>: Any individual or entity that uses the
+            Service.
           </li>
           <li>
-            <strong className="font-medium">API Keys</strong>: Authentication
-            credentials provided by third-party LLM providers.
+            <strong>API Keys</strong>: Authentication credentials provided by
+            third-party LLM providers.
           </li>
         </ul>
       </section>
@@ -53,20 +53,13 @@ export default function TermsPage({}: Route.ComponentProps) {
       <section className="mb-10">
         <h2 className="text-2xl font-light mb-5">3. License and Open Source</h2>
         <p className="mb-4">
-          ModelRules is licensed under the Apache License 2.0, a copy of which
-          can be found at
-          <a
-            href="https://www.apache.org/licenses/LICENSE-2.0"
-            className="text-primary hover:underline mx-1"
-          >
-            https://www.apache.org/licenses/LICENSE-2.0
-          </a>
-          .
+          Modelrules is licensed under the MIT License. A copy of the license
+          can be found in the project repository.
         </p>
         <p>
           You are permitted to use, modify, and distribute the software in
           accordance with this license. Any contributions to the project will
-          also be governed by the Apache License 2.0.
+          also be governed by the MIT License.
         </p>
       </section>
 

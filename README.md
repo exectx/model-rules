@@ -119,6 +119,4 @@ Distributed under the MIT License.
 
 ## Acknowledgments
 
-- [Vercel](https://vercel.com) for the inspiration on README design.
-- [Cloudflare](https://www.cloudflare.com/) for the powerful serverless platform.
-- All the open-source libraries that made this project possible.
+- [Unkey](https://github.com/unkeyed/unkey) for the inspiration on key generation strategy.

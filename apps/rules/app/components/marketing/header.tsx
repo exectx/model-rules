@@ -8,8 +8,8 @@ import { ChevronRight } from "@/components/ui/icons";
 
 const menuItems = [
   { name: "Features", href: "#features" },
-  { name: "GitHub", href: "https://github.com/exectx" },
-  { name: "About", href: "https://github.com/exectx" },
+  { name: "GitHub", href: "https://github.com/exectx/model-rules" },
+  { name: "Documentation", href: "/docs" },
 ];
 
 export const HeroHeader = () => {

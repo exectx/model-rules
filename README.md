@@ -1,68 +1,36 @@
-# Rules API Documentation - Rules
+# Modelrules
 
-## Overview
+![Modelrules Hero Image](hero.png)
 
-Rules provides a unified API endpoint for interacting with various LLM providers. It allows you to customize request parameters and apply the matching rules before proxying to the configured provider.
+Modelrules is a rules engine for LLM APIs. It provides a simple way to override any API parameters for OpenAI-compatible LLM providers. It's ideal for environments where LLM clients are constrained to specific parameters or can't offer flexible customization.
 
-## Authentication
+All configuration rules are applied server-side, and you can securely store your LLM provider credentials.
 
-All API requests require authentication using a Bearer token:
+## How it Works
 
-```
-Authorization: Bearer your_api_token
-```
+1.  **Create a Virtual API Key**: Generate a new API key within the Modelrules application.
+2.  **Define a Ruleset**: Create a ruleset for a specific LLM provider or model. In the ruleset, you can override API parameters (like `temperature`, `top_p`, etc.) and securely provide the credentials for the target LLM provider.
+3.  **Make a Request**: Send a request to the Modelrules API as you would to the OpenAI API. To specify which ruleset to use, prepend its name and two colons to the model name. For example, with a ruleset named "my-ruleset" and the "gpt-3.5-turbo" model, set the model to `"my-ruleset::gpt-3.5-turbo"`.
 
-You can generate API tokens in the dashboard.
+## Example Usage
 
-## Proxy Endpoint
+Here's how you can make a request:
 
-### Send a Chat Completion Request
+### cURL
 
-Update the `baseUrl` parameter in your OpenAI client to point to the proxy endpoint.
-
-**Endpoint**: `POST /api/chat/completions`
-
-**Request Format**:
-
-```json
-{
-  "model": "openai::gpt-4",
-  "messages": [
-    { "role": "system", "content": "You are a helpful assistant." },
-    { "role": "user", "content": "Tell me about parameter overrides." }
-  ],
-  "temperature": 0.7,
-  "max_tokens": 500
-}
+```bash
+curl -X POST https://rules.exectx.run/api/chat/completions \
+-H "Authorization: Bearer $RULES_API_KEY" \
+-H "Content-Type: application/json" \
+-d '{
+  "model": "my-ruleset::o4-mini",
+  "messages": [{
+    "role": "user",
+    "content": "What is the capital of France?"
+  }]
+}'
 ```
 
-**Model Name Format**:
+## Local Development
 
-- With provider prefix: `provider::model` (e.g., `openai::gpt-4`, `anthropic::claude-2`)
-- TODO: Without prefix: Just the model name (e.g., `gpt-4`) - uses default provider
-
-**Response**:
-
-The response will match the format returned by the OpenAI API.
-
-## Rules
-
-Your request parameters will be combined with any configured provider-level or model-specific rules. Request parameters always take precedence over stored overrides.
-
-## Best Practices
-
-1. Use specific provider prefixes in multi-provider setups
-2. Configure sensible defaults at the provider and model level
-3. Override parameters only when needed for specific requests
-4. Use streaming for real-time responses
-5. Monitor token usage to avoid rate limits
-
-## Error Handling
-
-Possible error responses:
-
-- 400: Bad Request (invalid parameters)
-- 401: Unauthorized (missing or invalid token)
-- 404: Not Found (unknown route or model)
-- 429: Too Many Requests (rate limit exceeded)
-- 500: Internal Server Error
+For detailed instructions on how to run the project locally, please see the [local development guide](./apps/rules/README.md#local-development).
